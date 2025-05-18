@@ -35,8 +35,15 @@ const Hero = () => {
     if (inView) controls.start("visible");
   }, [inView, controls]);
 
+  const handleScroll = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <motion.section
+    <motion.section id = "hero"
       ref={ref}
       className="min-h-screen h-screen flex flex-col justify-center items-center bg-purple-500 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white text-center relative overflow-hidden"
       initial="hidden"
@@ -89,7 +96,7 @@ const Hero = () => {
         variants={textVariants}
         custom={3}
       >
-        <motion.a
+        {/* <motion.a
           href="D:/College/Anti_CV.pdf"
           target="_blank"
           rel="noopener noreferrer"
@@ -102,8 +109,8 @@ const Hero = () => {
           whileTap={{ scale: 0.97 }}
           className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
         >
-          View My Resume
-        </motion.a>
+          More on Me
+        </motion.a> */}
         <motion.button
           className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
           whileHover={{
@@ -115,6 +122,22 @@ const Hero = () => {
           whileTap={{ scale: 0.97 }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
+          onClick={() => handleScroll("about")}
+        >
+          More on me
+        </motion.button>
+        <motion.button
+          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
+          whileHover={{
+            scale: 1.08,
+            backgroundColor: "#fff",
+            color: "#000",
+            boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
+          }}
+          whileTap={{ scale: 0.97 }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={() => handleScroll("projects")}
         >
           Explore Work
         </motion.button>

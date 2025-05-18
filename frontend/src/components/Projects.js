@@ -16,10 +16,25 @@ const projects = [
     desc: "Portfolio Website",
     img: "https://source.unsplash.com/random/800x600?website,3",
   },
+  {
+    title: "Project Four",
+    desc: "Portfolio Website",
+    img: "https://source.unsplash.com/random/800x600?website,4",
+  },
+  {
+    title: "Project Five",
+    desc: "Portfolio Website",
+    img: "https://source.unsplash.com/random/800x600?website,5",
+  },
+  {
+    title: "Project Six",
+    desc: "Portfolio Website",
+    img: "https://source.unsplash.com/random/800x600?website,6",
+  },
 ];
 
 const Projects = () => (
-  <motion.section
+  <motion.section id="projects"
     className="bg-gray-50 py-32 px-6 relative overflow-hidden"
     initial={{ opacity: 0, y: 80 }}
     whileInView={{ opacity: 1, y: 0 }}

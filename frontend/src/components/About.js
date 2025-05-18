@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const About = () => {
+  const [showResume, setShowResume] = useState(false);
   return (
-    <motion.section
+    <motion.section id="about"
       className="bg-white py-32 px-6 text-black relative overflow-hidden"
       initial={{ opacity: 0, x: -100 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -32,11 +34,10 @@ const About = () => {
         >
           <h2 className="text-5xl font-bold mb-8">About Me</h2>
           <p className="text-lg leading-relaxed">
-            Hi, I'm Suri Shashank, a creative developer who loves building
-            unique, minimal, and impactful web experiences. I specialize in the MERN stack and enjoy solving real-world problems with code.
+            Hi, I’m Suri Shashank, a Computer Science and Data Science enthusiast with a knack for building intelligent and impactful software. I specialize in full-stack development using the MERN stack and have a strong foundation in Machine Learning, Deep Learning, and Linux kernel modules. Whether it's crafting sleek user interfaces, securing data at the system level, or deploying ML models in mobile apps, I thrive at the intersection of technology and innovation.
           </p>
           <p className="mt-4 text-lg leading-relaxed">
-            I focus on clean design and seamless functionality, always aiming to bring ideas to life in a memorable way. Let's create something amazing together!
+            Currently, I'm a Research Intern at Cyber Guard 360, where I’m building a Linux kernel module to safeguard data during ransomware attacks. I've also developed real-world applications like a diabetes prediction app, an LLM-powered lung disease detector, and SAR image flood analysis using generative AI. I'm always hungry to learn, quick to adapt, and passionate about turning bold ideas into working code.
           </p>
         </motion.div>
 
@@ -60,6 +61,50 @@ const About = () => {
           </div>
         </motion.div>
       </div>
+      {/* View Resume Button */}
+      <div className="flex justify-center mt-12 relative z-10">
+        <motion.button
+          className="px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setShowResume(true)}
+        >
+          View My Resume
+        </motion.button>
+      </div>
+
+      {/* Resume Modal */}
+      <AnimatePresence>
+        {showResume && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-lg shadow-2xl p-4 max-w-3xl w-full relative"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <button
+                className="absolute top-2 right-4 text-2xl text-gray-600 hover:text-red-500"
+                onClick={() => setShowResume(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <iframe
+                src="http://localhost:5000/resume"
+                title="Resume"
+                className="w-full h-[70vh] rounded"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.section>
   );
 };
