@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import { useRef, useEffect } from "react";
 
 const floatingVariants = {
   animate: {
@@ -13,24 +12,33 @@ const floatingVariants = {
   },
 };
 
+const textVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: (i = 1) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.2 * i,
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  }),
+};
+
 const Hero = () => {
   const [hovered, setHovered] = useState(false);
-
-  // Scroll-based animation
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const controls = useAnimation();
 
   useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-    }
+    if (inView) controls.start("visible");
   }, [inView, controls]);
 
   return (
     <motion.section
       ref={ref}
-      className="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white text-center relative overflow-hidden"
+      className="min-h-screen h-screen flex flex-col justify-center items-center bg-purple-500 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white text-center relative overflow-hidden"
       initial="hidden"
       animate={controls}
       variants={{
@@ -40,62 +48,87 @@ const Hero = () => {
     >
       {/* Animated Background Overlay */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 blur-3xl"
+        className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 blur-3xl pointer-events-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 2 }}
       />
 
-      {/* Main Content */}
-      <motion.h1
-        className="text-7xl font-extrabold tracking-tighter drop-shadow-lg"
-        initial={{ opacity: 0, y: 40 }}
-        animate={controls}
-        variants={{
-          visible: { opacity: 1, y: 0, transition: { delay: 0.2, duration: 1 } },
-        }}
-      >
-        I AM SURI SHASHANK
-      </motion.h1>
-      <motion.p
-        className="mt-6 text-lg tracking-wide drop-shadow-md"
-        initial={{ opacity: 0, y: 40 }}
-        animate={controls}
-        variants={{
-          visible: { opacity: 1, y: 0, transition: { delay: 0.5, duration: 1 } },
-        }}
-      >
-        Creative Software Developer
-      </motion.p>
-
-      {/* Button with Framer Motion Hover/Tap */}
-      <motion.button
-        className="mt-12 border-2 border-white px-10 py-3 text-lg font-semibold transition-all duration-300 bg-transparent rounded-lg"
-        whileHover={{
-          scale: 1.08,
-          backgroundColor: "#fff",
-          color: "#000",
-          boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
-        }}
-        whileTap={{ scale: 0.97 }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        Explore Work
-      </motion.button>
-
       {/* Floating Animated Elements */}
       <motion.div
-        className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl"
+        className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
       />
       <motion.div
-        className="absolute bottom-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-2xl"
+        className="absolute bottom-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
         style={{ animationDelay: "1s" }}
       />
+
+      {/* Main Content */}
+      <motion.h1
+        className="text-6xl md:text-7xl font-extrabold tracking-tighter drop-shadow-lg mb-4"
+        variants={textVariants}
+        custom={1}
+      >
+        Hi, I'm Suri Shashank
+      </motion.h1>
+      <motion.p
+        className="mt-2 text-xl md:text-2xl tracking-wide drop-shadow-md mb-8"
+        variants={textVariants}
+        custom={2}
+      >
+        <span className="bg-white/20 px-3 py-1 rounded-lg">
+          Creative Developer, Problem Solver, & Anti-Resume Enthusiast
+        </span>
+      </motion.p>
+      <motion.div
+        className="flex flex-col md:flex-row gap-6 justify-center items-center"
+        variants={textVariants}
+        custom={3}
+      >
+        <motion.a
+          href="D:/College/Anti_CV.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{
+            scale: 1.08,
+            backgroundColor: "#fff",
+            color: "#000",
+            boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
+          }}
+          whileTap={{ scale: 0.97 }}
+          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
+        >
+          View My Resume
+        </motion.a>
+        <motion.button
+          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
+          whileHover={{
+            scale: 1.08,
+            backgroundColor: "#fff",
+            color: "#000",
+            boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
+          }}
+          whileTap={{ scale: 0.97 }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          Explore Work
+        </motion.button>
+      </motion.div>
+
+      {/* Fun Interactive Tagline */}
+      <motion.p
+        className="mt-12 text-lg italic text-white/80"
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 1.2, duration: 1 }}
+      >
+        <span role="img" aria-label="sparkles">✨</span> Not your average portfolio. Not your average developer. <span role="img" aria-label="rocket">🚀</span>
+      </motion.p>
     </motion.section>
   );
 };
