@@ -8,6 +8,27 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Prevent text/image selection on the whole site */
+body, * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+/* Hide scrollbars for the whole page (all modern browsers) */
+body {
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE and Edge (legacy) */
+  overflow: -moz-scrollbars-none;  /* Older Firefox */
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;        /* Chrome, Safari, Opera, Edge (Chromium) */
+}
 
 body {
   margin: 0;
