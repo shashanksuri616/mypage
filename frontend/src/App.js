@@ -2,6 +2,10 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import Skills from './components/Skills';
+import Certificates from './components/Certificates';
+import Timeline from './components/Timeline';
+import Navbar from './components/Navbar';
 import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -30,8 +34,12 @@ function App() {
 
   return (
     <div>
+      <Navbar />
       <Hero />
       <About />
+      <Skills />
+      <Certificates />
+      <Timeline />
       <Projects />
       <Contact />
     </div>
