@@ -38,9 +38,9 @@ function App() {
       <Hero />
       <About />
       <Skills />
-      <Certificates />
       <Timeline />
       <Projects />
+      <Certificates />
       <Contact />
     </div>
   );

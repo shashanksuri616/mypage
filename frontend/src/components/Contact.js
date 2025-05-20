@@ -24,7 +24,7 @@ const Contact = () => {
     }
   };
   return (
-    <motion.section
+    <motion.section id="contact"
       className="bg-gray-900 py-32 px-6 text-white relative overflow-hidden"
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}

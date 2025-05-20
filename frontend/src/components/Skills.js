@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const skills = [
@@ -11,7 +12,7 @@ const skills = [
 ];
 
 const Skills = () => (
-  <section className="py-24 px-6 bg-white relative">
+  <section id="skills" className="py-24 px-6 bg-white relative">
     <h2 className="text-4xl font-bold mb-12 text-center">Skills & Tech</h2>
     <div className="flex flex-wrap justify-center gap-8">
       {skills.map((skill, i) => (

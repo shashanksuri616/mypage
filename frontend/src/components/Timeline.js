@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const timeline = [
@@ -23,7 +24,7 @@ const timeline = [
 ];
 
 const Timeline = () => (
-  <section className="py-24 px-6 bg-gray-50 relative">
+  <section id="timeline" className="py-24 px-6 bg-gray-50 relative">
     <h2 className="text-4xl font-bold mb-12 text-center">Timeline</h2>
     <div className="max-w-3xl mx-auto">
       {timeline.map((item, i) => (

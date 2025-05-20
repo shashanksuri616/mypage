@@ -147,44 +147,70 @@
 // };
 
 // export default Projects;
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const projects = [
-  { title: "Project One", desc: "UI/UX & Development", img: "...", details: "Full details about Project One..." },
-  { title: "Project Two", desc: "E-commerce Platform", img: "...", details: "Full details about Project Two..." },
-  { title: "Project Three", desc: "Portfolio Website", img: "...", details: "Full details about Project Three..." },
-  { title: "Project Four", desc: "Portfolio Website", img: "...", details: "Full details about Project Four..." },
-  { title: "Project Five", desc: "Portfolio Website", img: "...", details: "Full details about Project Five..." },
-  { title: "Project Six", desc: "Portfolio Website", img: "...", details: "Full details about Project Six..." },
+  {
+    title: "Project One",
+    desc: "UI/UX & Development",
+    img: "https://via.placeholder.com/400x200?text=Project+One",
+    link: "#"
+  },
+  {
+    title: "Project Two",
+    desc: "E-commerce Platform",
+    img: "https://via.placeholder.com/400x200?text=Project+Two",
+    link: "#"
+  },
+  {
+    title: "Project Three",
+    desc: "Portfolio Website",
+    img: "https://via.placeholder.com/400x200?text=Project+Three",
+    link: "#"
+  },
+  {
+    title: "Project Four",
+    desc: "ML Flood Analysis",
+    img: "https://via.placeholder.com/400x200?text=Project+Four",
+    link: "#"
+  },
+  {
+    title: "Project Five",
+    desc: "LLM Lung Disease Detector",
+    img: "https://via.placeholder.com/400x200?text=Project+Five",
+    link: "#"
+  },
+  {
+    title: "Project Six",
+    desc: "Diabetes Prediction App",
+    img: "https://via.placeholder.com/400x200?text=Project+Six",
+    link: "#"
+  },
 ];
 
 const Projects = () => (
-  <section id="projects" className="relative overflow-hidden py-32 px-6">
-    <div className="absolute inset-0 bg-gray-50 z-0" aria-hidden="true" />
-    <h2 className="text-5xl font-bold mb-16 text-center relative z-10">Selected Work</h2>
-    <div className="max-w-6xl mx-auto relative z-10">
+  <section id="projects" className="py-24 px-6 bg-gray-50 relative">
+    <h2 className="text-4xl font-bold mb-12 text-center">Projects</h2>
+    <div className="max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {projects.map((proj, i) => (
-          <motion.div
+          <motion.a
+            href={proj.link}
+            target="_blank"
+            rel="noopener noreferrer"
             key={proj.title}
-            className="group relative overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg cursor-pointer transition-all duration-500 bg-white"
-            whileHover={{ scale: 1.04 }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.8,
-              delay: i * 0.12
-            }}
+            className="group block bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.08 }}
           >
             <img src={proj.img} alt={proj.title} className="w-full h-48 object-cover" />
             <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">{proj.title}</h3>
+              <h3 className="text-xl font-bold mb-2">{proj.title}</h3>
               <p className="text-gray-600">{proj.desc}</p>
             </div>
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-              <span className="text-white text-lg font-semibold">View Details</span>
-            </div>
-          </motion.div>
+          </motion.a>
         ))}
       </div>
     </div>
