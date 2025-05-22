@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const skills = [
@@ -12,13 +11,13 @@ const skills = [
 ];
 
 const Skills = () => (
-  <section id="skills" className="py-24 px-6 bg-white relative">
+  <section id="skills" className="py-24 px-6 bg-gray-50 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
     <h2 className="text-4xl font-bold mb-12 text-center">Skills & Tech</h2>
     <div className="flex flex-wrap justify-center gap-8">
       {skills.map((skill, i) => (
         <motion.div
           key={skill.name}
-          className="flex flex-col items-center bg-gray-50 rounded-xl shadow p-6 w-40"
+          className="flex flex-col items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl transition-colors duration-300 p-6 w-40 "
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: i * 0.08 }}

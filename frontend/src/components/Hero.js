@@ -45,7 +45,12 @@ const Hero = () => {
   return (
     <motion.section id = "hero"
       ref={ref}
-      className="min-h-screen h-screen flex flex-col justify-center items-center bg-purple-500 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white text-center relative overflow-hidden"
+      className="
+  min-h-screen h-screen flex flex-col justify-center items-center
+  bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400
+  dark:bg-gradient-to-br dark:from-emerald-900 dark:via-indigo-900 dark:to-black
+  text-white text-center relative overflow-hidden transition-colors duration-500
+"
       initial="hidden"
       animate={controls}
       variants={{

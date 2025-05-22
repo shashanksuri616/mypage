@@ -1,13 +1,97 @@
-const Navbar = () => (
-  <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur z-50 flex justify-center gap-8 py-4">
-    <button onClick={() => document.getElementById("hero").scrollIntoView({ behavior: "smooth" })}>Home</button>
-    <button onClick={() => document.getElementById("about").scrollIntoView({ behavior: "smooth" })}>About</button>
-    <button onClick={() => document.getElementById("skills").scrollIntoView({ behavior: "smooth" })}>Skills</button>
-    <button onClick={() => document.getElementById("timeline").scrollIntoView({ behavior: "smooth" })}>Timeline</button>
-    <button onClick={() => document.getElementById("projects").scrollIntoView({ behavior: "smooth" })}>Projects</button>
-    <button onClick={() => document.getElementById("certificates").scrollIntoView({ behavior: "smooth" })}>Certificates</button>
-    <button onClick={() => document.getElementById("contact").scrollIntoView({ behavior: "smooth" })}>Contact</button>
-  </nav>
-);
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const navItems = [
+  { label: "Home", id: "hero" },
+  { label: "About", id: "about" },
+  { label: "Skills", id: "skills" },
+  { label: "Timeline", id: "timeline" },
+  { label: "Projects", id: "projects" },
+  { label: "Certificates", id: "certificates" },
+  { label: "Contact", id: "contact" },
+];
+
+const ThemeToggle = () => {
+  const [dark, setDark] = useState(() =>
+    document.documentElement.classList.contains('dark')
+  );
+
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle('dark');
+    setDark(!dark);
+  };
+
+  return (
+    <button
+      onClick={toggleTheme}
+      className="fixed top-6 right-8 z-50 bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 rounded-full p-2 shadow-lg transition-colors"
+      aria-label="Toggle dark mode"
+    >
+      {dark ? (
+        <svg className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 4V2m0 20v-2m8-8h2M2 12H4m15.07-7.07l1.42-1.42M4.93 19.07l1.42-1.42m12.02 0l1.42 1.42M4.93 4.93L3.51 3.51M12 6a6 6 0 100 12 6 6 0 000-12z"/>
+        </svg>
+      ) : (
+        <svg className="w-6 h-6 text-gray-700 dark:text-gray-200" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+};
+
+const Navbar = () => {
+  const [show, setShow] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < 80) {
+        setShow(true); // Always show at the top
+      } else if (currentY > lastScrollY.current) {
+        setShow(false); // Scrolling down, hide
+      } else {
+        setShow(true); // Scrolling up, show
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <>
+      <AnimatePresence>
+        {show && (
+          
+          <motion.nav
+            key="navbar"
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-6 inset-x-0 z-50 flex justify-center"
+          >
+            <div className="flex gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-full shadow-lg px-6 py-2 border border-gray-200 dark:border-gray-700">
+              {navItems.map(item => (
+                <motion.button
+                  key={item.id}
+                  onClick={() => document.getElementById(item.id).scrollIntoView({ behavior: "smooth" })}
+                  className="px-4 py-2 rounded-full font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-700 dark:hover:text-purple-300 transition-all focus:outline-none"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+      <ThemeToggle />
+    </>
+  );
+};
 
 export default Navbar;

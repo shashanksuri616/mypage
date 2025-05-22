@@ -147,7 +147,6 @@
 // };
 
 // export default Projects;
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const projects = [
@@ -190,7 +189,7 @@ const projects = [
 ];
 
 const Projects = () => (
-  <section id="projects" className="py-24 px-6 bg-gray-50 relative">
+  <section id="projects" className="py-24 px-6 bg-gray-50 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
     <h2 className="text-4xl font-bold mb-12 text-center">Projects</h2>
     <div className="max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -200,7 +199,7 @@ const Projects = () => (
             target="_blank"
             rel="noopener noreferrer"
             key={proj.title}
-            className="group block bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition"
+            className="group block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl transition-colors duration-300"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: i * 0.08 }}

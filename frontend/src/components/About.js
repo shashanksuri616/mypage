@@ -5,7 +5,7 @@ const About = () => {
   const [showResume, setShowResume] = useState(false);
   return (
     <motion.section id="about"
-      className="bg-white py-32 px-6 text-black relative overflow-hidden"
+      className="py-32 px-6 bg-gray-50 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300"
       initial={{ opacity: 0, x: -100 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.5 }}
