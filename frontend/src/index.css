@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -8,7 +8,7 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-/* Prevent text/image selection on the whole site */
+/* Prevent text/image selection on the whole site *//*
 body, * {
   user-select: none;
   -webkit-user-select: none;
@@ -16,18 +16,18 @@ body, * {
   -moz-user-select: none;
 }
 
-/* Hide scrollbars for the whole page (all modern browsers) */
+/* Hide scrollbars for the whole page (all modern browsers) *//*
 body {
-  scrollbar-width: none;           /* Firefox */
-  -ms-overflow-style: none;        /* IE and Edge (legacy) */
-  overflow: -moz-scrollbars-none;  /* Older Firefox */
+  scrollbar-width: none;           /* Firefox *//*
+  -ms-overflow-style: none;        /* IE and Edge (legacy) *//*
+  overflow: -moz-scrollbars-none;  /* Older Firefox *//*
 }
 
 body::-webkit-scrollbar,
 html::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
-  display: none !important;        /* Chrome, Safari, Opera, Edge (Chromium) */
+  display: none !important;        /* Chrome, Safari, Opera, Edge (Chromium) *//*
 }
 
 body {
@@ -42,4 +42,71 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+} */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@fontsource/inter';
+
+/* Use Inter everywhere for consistency */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  margin: 0;
+  background-color: #f8fafc; /* Tailwind gray-50 as fallback */
+  color: #18181b;            /* Tailwind zinc-900 as fallback */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode fallback */
+html.dark body {
+  background-color: #09090b; /* Tailwind zinc-950 */
+  color: #f4f4f5;            /* Tailwind zinc-100 */
+}
+
+/* Hide scrollbars for desktop browsers only */
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+body {
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE and Edge (legacy) */
+}
+
+body, * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+/* Code font for code blocks */
+code {
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 1em;
+}
+
+@keyframes blob {
+  0%, 100% { transform: scale(1) translate(0, 0);}
+  33% { transform: scale(1.1) translate(30px, -20px);}
+  66% { transform: scale(0.9) translate(-20px, 30px);}
+}
+@keyframes blob2 {
+  0%, 100% { transform: scale(1) translate(0, 0);}
+  33% { transform: scale(1.05) translate(-40px, 20px);}
+  66% { transform: scale(0.95) translate(20px, -30px);}
+}
+.animate-blob {
+  animation: blob 18s ease-in-out infinite;
+}
+.animate-blob2 {
+  animation: blob2 22s ease-in-out infinite;
 }

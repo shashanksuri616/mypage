@@ -34,6 +34,11 @@ function App() {
 
   return (
     <div>
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* Animated blurred blob */}
+        <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 opacity-40 blur-3xl animate-blob" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-gradient-to-tr from-emerald-400 via-cyan-400 to-indigo-400 opacity-30 blur-2xl animate-blob2" />
+      </div>
       <Navbar />
       <Hero />
       <About />
