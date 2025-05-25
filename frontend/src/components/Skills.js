@@ -11,7 +11,7 @@ const skills = [
 ];
 
 const Skills = () => (
-  <section id="skills" className="py-24 px-6 bg-gray-50 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
+  <section id="skills" className="py-24 px-6 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md text-black dark:text-white transition-colors duration-300">
     <h2 className="text-4xl font-bold mb-12 text-center">Skills & Tech</h2>
     <div className="flex flex-wrap justify-center gap-8">
       {skills.map((skill, i) => (
