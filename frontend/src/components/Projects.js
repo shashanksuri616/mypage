@@ -118,6 +118,7 @@ const Projects = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition"
+                onClick={() => setSelected(null)}
               >
                 View Project
               </a>
