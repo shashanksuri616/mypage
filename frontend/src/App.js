@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -15,15 +15,17 @@ import 'aos/dist/aos.css';
 const BlobBackground = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
+  // useCallback for better performance
+  const handleMouseMove = useCallback((e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+    setPosition({ x, y });
+  }, []);
+
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setPosition({ x, y });
-    };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  }, [handleMouseMove]);
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
@@ -55,15 +57,22 @@ function App() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('.fade-in', {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      scrollTrigger: {
-        trigger: '.fade-in',
-        start: 'top 80%',
-      },
+    ScrollTrigger.batch('.fade-in', {
+      onEnter: batch => gsap.to(batch, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 1,
+        overwrite: true,
+        ease: "power2.out"
+      }),
+      onLeave: batch => gsap.to(batch, { opacity: 0, y: 50, overwrite: true }),
+      onEnterBack: batch => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.15, duration: 1, overwrite: true }),
+      onLeaveBack: batch => gsap.to(batch, { opacity: 0, y: 50, overwrite: true }),
+      start: 'top 80%',
     });
+    // Clean up ScrollTrigger on unmount
+    return () => ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   }, []);
 
   return (
