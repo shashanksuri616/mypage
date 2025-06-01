@@ -26,5 +26,18 @@ app.post('/api/contact', (req, res) => {
 // Health check
 app.get('/', (req, res) => res.send('API Running'));
 
+app.get('/certificates', (req, res) => {
+  res.json([
+    {
+      name: "Deep Learning Specialization",
+      org: "Coursera",
+      img: "/certificates/deep-learning.png",
+      file: "/certificates/deep-learning.pdf",
+      desc: "A comprehensive specialization covering neural networks, CNNs, RNNs, and more."
+    },
+    // ...more certificates
+  ]);
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
