@@ -10,12 +10,11 @@ import Contact from './components/Contact';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AOS from 'aos';
-import 'aos/dist/aos.css';
+import 'aos/dist/aos.css';  
 
 const BlobBackground = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  // useCallback for better performance
   const handleMouseMove = useCallback((e) => {
     const x = (e.clientX / window.innerWidth - 0.5) * 2;
     const y = (e.clientY / window.innerHeight - 0.5) * 2;
@@ -31,16 +30,23 @@ const BlobBackground = () => {
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
       {/* Top Left Blob */}
       <div
-        className="absolute top-[-20%] left-[-20%] w-[60vw] h-[60vw] bg-gradient-to-br from-white via-gray-100 to-purple-100 dark:from-black dark:via-gray-900 dark:to-purple-900 opacity-25 blur-3xl animate-blob transition-transform duration-1000"
+        className="absolute top-[-18%] left-[-18%] w-[60vw] h-[60vw] bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 opacity-30 blur-3xl animate-blob transition-transform duration-1000"
         style={{
-          transform: `translate(${position.x * 60}px, ${position.y * 60}px)`,
+          transform: `translate(${position.x * 60}px, ${position.y * 60}px) scale(1.05)`,
         }}
       />
       {/* Bottom Right Blob */}
       <div
-        className="absolute bottom-[-15%] right-[-15%] w-[50vw] h-[50vw] bg-gradient-to-tr from-white via-gray-200 to-blue-100 dark:from-black dark:via-gray-800 dark:to-indigo-900 opacity-15 blur-2xl animate-blob2 transition-transform duration-1000"
+        className="absolute bottom-[-15%] right-[-15%] w-[50vw] h-[50vw] bg-gradient-to-tr from-gray-800 via-indigo-800 to-purple-900 opacity-20 blur-2xl animate-blob2 transition-transform duration-1000"
         style={{
-          transform: `translate(${position.x * -60}px, ${position.y * -60}px)`,
+          transform: `translate(${position.x * -60}px, ${position.y * -60}px) scale(1.1)`,
+        }}
+      />
+      {/* Center Accent Blob */}
+      <div
+        className="absolute top-1/2 left-1/2 w-[40vw] h-[40vw] bg-gradient-to-tl from-purple-700 via-indigo-800 to-gray-900 opacity-10 blur-2xl animate-blob3 transition-transform duration-1000"
+        style={{
+          transform: `translate(-50%, -50%) scale(${1 + (position.x + position.y) * 0.03})`,
         }}
       />
     </div>
