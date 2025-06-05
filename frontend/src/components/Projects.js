@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const projects = [
   {
+    id: "project-one",
     title: "Project One",
     desc: "UI/UX & Development",
     img: "https://via.placeholder.com/400x200?text=Project+One",
@@ -10,6 +11,7 @@ const projects = [
     link: "#"
   },
   {
+    id: "project-two",
     title: "Project Two",
     desc: "E-commerce Platform",
     img: "https://via.placeholder.com/400x200?text=Project+Two",
@@ -17,6 +19,7 @@ const projects = [
     link: "#"
   },
   {
+    id: "project-three",
     title: "Project Three",
     desc: "Portfolio Website",
     img: "https://via.placeholder.com/400x200?text=Project+Three",
@@ -24,6 +27,7 @@ const projects = [
     link: "#"
   },
   {
+    id: "ml-flood",
     title: "Project Four",
     desc: "ML Flood Analysis",
     img: "https://via.placeholder.com/400x200?text=Project+Four",
@@ -31,6 +35,7 @@ const projects = [
     link: "#"
   },
   {
+    id: "llm-lung",
     title: "Project Five",
     desc: "LLM Lung Disease Detector",
     img: "https://via.placeholder.com/400x200?text=Project+Five",
@@ -38,6 +43,7 @@ const projects = [
     link: "#"
   },
   {
+    id: "diabetes-app",
     title: "Project Six",
     desc: "Diabetes Prediction App",
     img: "https://via.placeholder.com/400x200?text=Project+Six",
@@ -63,6 +69,7 @@ const Projects = () => {
           {projects.map((proj, i) => (
             <motion.div
               key={proj.title}
+              id={proj.id}
               className="group block bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl transition-colors duration-300 cursor-pointer"
               initial={{ opacity: 0, y: 30, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}

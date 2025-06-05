@@ -7,20 +7,23 @@ const timeline = [
     title: "Research Intern",
     org: "Cyber Guard 360",
     desc: "Built a Linux kernel module to safeguard data during ransomware attacks.",
+    projectId: null // No project card for this
   },
   {
     year: "2024",
     title: "LLM Lung Disease Detector",
     org: "Personal Project",
     desc: "Developed an LLM-powered lung disease detection tool.",
+    projectId: "llm-lung"
   },
   {
     year: "2023",
     title: "Diabetes Prediction App",
     org: "Personal Project",
     desc: "Created a mobile app for diabetes prediction using ML.",
+    projectId: "diabetes-app"
   },
-  // Add more as needed
+  // ...
 ];
 
 const Timeline = () => (
@@ -30,10 +33,21 @@ const Timeline = () => (
       {timeline.map((item, i) => (
         <motion.div
           key={item.title}
-          className="flex items-start mb-10"
+          className={`flex items-start mb-10 ${item.projectId ? "cursor-pointer group" : ""}`}
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: i * 0.12 }}
+          onClick={() => {
+            if (item.projectId) {
+              const el = document.getElementById(item.projectId);
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Optionally, highlight the project card
+                el.classList.add("ring-4", "ring-purple-400");
+                setTimeout(() => el.classList.remove("ring-4", "ring-purple-400"), 1200);
+              }
+            }
+          }}
         >
           <div className="flex flex-col items-center mr-6">
             <div className="w-4 h-4 bg-purple-500 rounded-full mb-1" />
