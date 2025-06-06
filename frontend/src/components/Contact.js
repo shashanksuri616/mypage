@@ -64,28 +64,29 @@ const Contact = () => {
   };
 
   return (
-    <motion.section id="contact"
-      className="bg-gray-900 py-32 px-6 text-white relative overflow-hidden bg-gray-50 dark:bg-gray-900 text-black dark:text-white"
+    <motion.section
+      id="contact"
+      className="relative py-32 px-6 bg-white/20 dark:bg-black/30 backdrop-blur-xl text-black dark:text-white transition-colors duration-500 overflow-hidden"
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 1 }}
     >
-      {/* Decorative Background */}
+      {/* Decorative Background Blobs */}
       <motion.div
-        className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-3xl opacity-30 pointer-events-none"
+        className="absolute top-0 left-0 w-56 h-56 bg-gradient-to-br from-purple-700 via-indigo-700 to-gray-900 rounded-full blur-3xl opacity-30 pointer-events-none"
         initial={{ scale: 0.8, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 0.3 }}
         transition={{ duration: 1.2 }}
       />
       <motion.div
-        className="absolute bottom-0 right-0 w-60 h-60 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full blur-3xl opacity-30 pointer-events-none"
+        className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tr from-indigo-800 via-purple-800 to-gray-900 rounded-full blur-3xl opacity-20 pointer-events-none"
         initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 0.3 }}
+        whileInView={{ scale: 1, opacity: 0.2 }}
         transition={{ duration: 1.2, delay: 0.2 }}
       />
 
-      <div className="max-w-4xl mx-auto relative z-10">
+      <div className="max-w-4xl mx-auto relative z-10 bg-white/40 dark:bg-gray-900/40 backdrop-blur-lg rounded-2xl shadow-xl p-10">
         <h2 className="text-5xl font-bold mb-12 text-center">Get in Touch</h2>
         <p className="text-lg text-center mb-12">
           Have a question or want to work together? Feel free to reach out!
@@ -97,25 +98,34 @@ const Contact = () => {
           transition={{ duration: 1, delay: 0.2 }}
           onSubmit={handleSubmit}
         >
-          <input name="name" value={form.name} onChange={handleChange}
+          <input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
             type="text"
             placeholder="Your Name"
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
           />
-          <input name="email" value={form.email} onChange={handleChange}
+          <input
+            name="email"
+            value={form.email}
+            onChange={handleChange}
             type="email"
             placeholder="Your Email"
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
           />
-          <textarea name="message" value={form.message} onChange={handleChange}
+          <textarea
+            name="message"
+            value={form.message}
+            onChange={handleChange}
             placeholder="Your Message"
             rows="5"
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
           ></textarea>
           <motion.button
             type="submit"
-            className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-lg transition-all duration-300"
-            whileHover={{ scale: 1.03 }}
+            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-all duration-300"
+            whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
             Send Message
