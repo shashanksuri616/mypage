@@ -19,6 +19,8 @@ A modern, minimal, and dynamic personal portfolio website built using the **MERN
 - Dark mode support (toggle in top-right corner)
 - Contact form with social links (LinkedIn, GitHub, X, Gmail, etc.)
 - Clean, minimal, and modern UI
+- Timeline and Projects are linked: clicking a timeline project scrolls to the project card
+- Certificates and resume are served dynamically from the backend
 
 ---
 
@@ -63,7 +65,8 @@ A modern, minimal, and dynamic personal portfolio website built using the **MERN
 - **React** – UI library
 - **Tailwind CSS** – Utility-first CSS framework
 - **Framer Motion** – Animations and transitions
-- **Express/MongoDB** – (Optional, for backend/contact form)
+- **GSAP** – Scroll and reveal animations
+- **Express/MongoDB** – (Optional, for backend/contact form and dynamic certificates)
 
 ---
 
@@ -102,6 +105,8 @@ src/
   Tweak Tailwind classes for your preferred color palette.
 - **Add sections:**  
   Duplicate and modify components as needed.
+- **Serve your certificates/resume:**  
+  Place your files in the backend/static folder and update the API endpoints.
 
 ---
 
