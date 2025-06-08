@@ -70,7 +70,7 @@ const Navbar = () => {
             initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -80, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} // <-- smoother and more natural
             className="fixed top-6 inset-x-0 z-50 flex justify-center"
           >
             <div className="flex gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-full shadow-lg px-6 py-2 border border-gray-200 dark:border-gray-700">
