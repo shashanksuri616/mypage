@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
+import SnakeBackground from "./SnakeBackground"; // Assuming this is the correct path to your SnakeBackground component
 
 const floatingVariants = {
   animate: {
@@ -59,12 +60,7 @@ const Hero = () => {
       }}
     >
       {/* Animated Background Overlay */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 blur-3xl pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2 }}
-      />
+      <SnakeBackground />
 
       {/* Floating Animated Elements */}
       <motion.div
