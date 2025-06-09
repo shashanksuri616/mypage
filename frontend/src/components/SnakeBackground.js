@@ -64,15 +64,14 @@ const SnakeBackground = () => {
         // Head target
         let headTarget = { ...target };
         if (idle) {
-          // Loop around cursor in idle
           const radius = SNAKE_LENGTH / 2 + sIdx * 18;
           headTarget.x += Math.cos(idleAngle + snake.phase) * radius;
           headTarget.y += Math.sin(idleAngle + snake.phase) * radius;
         }
 
         // Move head
-        snake.points[0].x = lerp(snake.points[0].x, headTarget.x, 0.18);
-        snake.points[0].y = lerp(snake.points[0].y, headTarget.y, 0.18);
+        snake.points[0].x = lerp(snake.points[0].x, headTarget.x, 0.28); // more responsive
+        snake.points[0].y = lerp(snake.points[0].y, headTarget.y, 0.28);
 
         // Move rest of body
         for (let i = 1; i < SEGMENTS; i++) {
@@ -81,12 +80,16 @@ const SnakeBackground = () => {
           // Wiggly offset
           const t = (Date.now() / 600 + i * 0.18 + snake.phase) % (Math.PI * 2);
           const wiggle = Math.sin(t) * 8 * (1 - i / SEGMENTS);
+
+          // Target position is a fixed distance from previous segment
           const dx = prev.x - pt.x;
           const dy = prev.y - pt.y;
           const angle = Math.atan2(dy, dx) + wiggle * 0.01;
           const dist = 16;
-          pt.x = lerp(pt.x, prev.x - Math.cos(angle) * dist, 0.35);
-          pt.y = lerp(pt.y, prev.y - Math.sin(angle) * dist, 0.35);
+
+          // Instead of heavy lerp, use a higher factor for snappier movement
+          pt.x = lerp(pt.x, prev.x - Math.cos(angle) * dist, 0.55);
+          pt.y = lerp(pt.y, prev.y - Math.sin(angle) * dist, 0.55);
         }
 
         // Draw snake
