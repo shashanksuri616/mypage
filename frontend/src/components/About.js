@@ -18,12 +18,6 @@ const About = () => {
         whileInView={{ scale: 1, opacity: 0.3 }}
         transition={{ duration: 1.2 }}
       />
-      <motion.div
-        className="absolute bottom-0 right-0 w-60 h-60 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full blur-3xl opacity-30 pointer-events-none"
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 0.3 }}
-        transition={{ duration: 1.2, delay: 0.2 }}
-      />
 
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
         {/* Text Content */}
