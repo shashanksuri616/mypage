@@ -58,7 +58,7 @@ const SnakeBackground = () => {
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      idleAngle += idle ? 0.025 : 0;
+      idleAngle += idle ? 0.018 : 0;
 
       snakesRef.current.forEach((snake, sIdx) => {
         // Head target
@@ -69,27 +69,27 @@ const SnakeBackground = () => {
           headTarget.y += Math.sin(idleAngle + snake.phase) * radius;
         }
 
-        // Move head
-        snake.points[0].x = lerp(snake.points[0].x, headTarget.x, 0.28); // more responsive
-        snake.points[0].y = lerp(snake.points[0].y, headTarget.y, 0.28);
+        // Move head (slightly smoother)
+        snake.points[0].x = lerp(snake.points[0].x, headTarget.x, 0.18);
+        snake.points[0].y = lerp(snake.points[0].y, headTarget.y, 0.18);
 
-        // Move rest of body
+        // Move rest of body (even smoother, with springy effect)
         for (let i = 1; i < SEGMENTS; i++) {
           const prev = snake.points[i - 1];
           const pt = snake.points[i];
           // Wiggly offset
-          const t = (Date.now() / 600 + i * 0.18 + snake.phase) % (Math.PI * 2);
-          const wiggle = Math.sin(t) * 8 * (1 - i / SEGMENTS);
+          const t = (Date.now() / 900 + i * 0.18 + snake.phase) % (Math.PI * 2);
+          const wiggle = Math.sin(t) * 10 * (1 - i / SEGMENTS);
 
           // Target position is a fixed distance from previous segment
           const dx = prev.x - pt.x;
           const dy = prev.y - pt.y;
-          const angle = Math.atan2(dy, dx) + wiggle * 0.01;
+          const angle = Math.atan2(dy, dx) + wiggle * 0.012;
           const dist = 16;
 
-          // Instead of heavy lerp, use a higher factor for snappier movement
-          pt.x = lerp(pt.x, prev.x - Math.cos(angle) * dist, 0.55);
-          pt.y = lerp(pt.y, prev.y - Math.sin(angle) * dist, 0.55);
+          // Use a lower lerp for smoother, more "connected" movement
+          pt.x = lerp(pt.x, prev.x - Math.cos(angle) * dist, 0.32);
+          pt.y = lerp(pt.y, prev.y - Math.sin(angle) * dist, 0.32);
         }
 
         // Draw snake
