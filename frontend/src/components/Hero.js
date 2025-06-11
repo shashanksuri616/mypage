@@ -60,7 +60,7 @@ const Hero = () => {
       }}
     >
       {/* Animated Background Overlay */}
-      <SnakeBackground />
+      {/*<SnakeBackground />*/}
 
       {/* Floating Animated Elements */}
       <motion.div
