@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import SnakeBackground from "./SnakeBackground"; // Assuming this is the correct path to your SnakeBackground component
+import SnakeBackground from "./SnakeBackground";
 
 const floatingVariants = {
   animate: {
@@ -44,14 +44,15 @@ const Hero = () => {
   };
 
   return (
-    <motion.section id = "hero"
+    <motion.section
+      id="hero"
       ref={ref}
       className="
-  min-h-screen h-screen flex flex-col justify-center items-center
-  bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400
-  dark:bg-gradient-to-br dark:from-emerald-900 dark:via-indigo-900 dark:to-black
-  text-white text-center relative overflow-hidden transition-colors duration-500
-"
+        min-h-screen h-screen flex flex-col justify-center items-center
+        bg-gradient-to-br from-[#3b0764] via-[#9333ea] to-[#f59e42]
+        dark:bg-gradient-to-br dark:from-[#022c22] dark:via-[#312e81] dark:to-[#000]
+        text-white text-center relative overflow-hidden transition-colors duration-500
+      "
       initial="hidden"
       animate={controls}
       variants={{
@@ -59,17 +60,17 @@ const Hero = () => {
         visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } },
       }}
     >
-      {/* Animated Background Overlay */}
-      {/*<SnakeBackground />*/}
+      {/* Animated Snake Background */}
+      <SnakeBackground />
 
       {/* Floating Animated Elements */}
       <motion.div
-        className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl pointer-events-none"
+        className="absolute top-10 left-10 w-20 h-20 bg-white/30 dark:bg-white/10 rounded-full blur-xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
       />
       <motion.div
-        className="absolute bottom-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"
+        className="absolute bottom-20 right-20 w-32 h-32 bg-white/20 dark:bg-white/5 rounded-full blur-2xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
         style={{ animationDelay: "1s" }}
@@ -77,18 +78,21 @@ const Hero = () => {
 
       {/* Main Content */}
       <motion.h1
-        className="text-6xl md:text-7xl font-extrabold tracking-tighter drop-shadow-lg mb-4"
+        className="text-6xl md:text-7xl font-extrabold tracking-tighter drop-shadow-[0_2px_16px_rgba(0,0,0,0.35)] mb-4"
         variants={textVariants}
         custom={1}
+        style={{
+          textShadow: "0 2px 16px rgba(0,0,0,0.35), 0 1px 0 #fff"
+        }}
       >
-        Hi, I'm Suri Shashank
+        Hi, I'm <span className="text-[#fbbf24] dark:text-[#a3e635]">Suri Shashank</span>
       </motion.h1>
       <motion.p
-        className="mt-2 text-xl md:text-2xl tracking-wide drop-shadow-md mb-8"
+        className="mt-2 text-xl md:text-2xl tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] mb-8"
         variants={textVariants}
         custom={2}
       >
-        <span className="bg-white/20 px-3 py-1 rounded-lg">
+        <span className="bg-white/30 dark:bg-black/30 px-3 py-1 rounded-lg text-black dark:text-white shadow">
           Creative Developer, Problem Solver, & Anti-Resume Enthusiast
         </span>
       </motion.p>
@@ -97,27 +101,12 @@ const Hero = () => {
         variants={textVariants}
         custom={3}
       >
-        {/* <motion.a
-          href="D:/College/Anti_CV.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{
-            scale: 1.08,
-            backgroundColor: "#fff",
-            color: "#000",
-            boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
-          }}
-          whileTap={{ scale: 0.97 }}
-          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
-        >
-          More on Me
-        </motion.a> */}
         <motion.button
-          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
+          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-white/20 dark:bg-white/10 text-white hover:text-[#3b0764] dark:hover:text-[#a3e635] hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#fbbf24] dark:focus:ring-[#a3e635]"
           whileHover={{
             scale: 1.08,
             backgroundColor: "#fff",
-            color: "#000",
+            color: "#3b0764",
             boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
           }}
           whileTap={{ scale: 0.97 }}
@@ -128,11 +117,11 @@ const Hero = () => {
           More on me
         </motion.button>
         <motion.button
-          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-transparent"
+          className="border-2 border-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 bg-white/20 dark:bg-white/10 text-white hover:text-[#3b0764] dark:hover:text-[#a3e635] hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#fbbf24] dark:focus:ring-[#a3e635]"
           whileHover={{
             scale: 1.08,
             backgroundColor: "#fff",
-            color: "#000",
+            color: "#3b0764",
             boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
           }}
           whileTap={{ scale: 0.97 }}
@@ -146,7 +135,7 @@ const Hero = () => {
 
       {/* Fun Interactive Tagline */}
       <motion.p
-        className="mt-12 text-lg italic text-white/80"
+        className="mt-12 text-lg italic text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.18)]"
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ delay: 1.2, duration: 1 }}
