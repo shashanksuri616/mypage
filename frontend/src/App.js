@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AOS from 'aos';
 import 'aos/dist/aos.css';  
+import ScrollFloat from './components/ScrollFloat';
 
 const BlobBackground = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -84,6 +85,7 @@ function App() {
   return (
     <div>
       <BlobBackground />
+      <ScrollFloat/>
       <Navbar />
       <Hero />
       <About />

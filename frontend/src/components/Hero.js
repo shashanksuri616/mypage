@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import SnakeBackground from "./SnakeBackground";
+//import SnakeBackground from "./SnakeBackground";
 
 const floatingVariants = {
   animate: {
@@ -60,8 +60,8 @@ const Hero = () => {
         visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } },
       }}
     >
-      {/* Animated Snake Background */}
-      <SnakeBackground />
+      {/* Animated Snake Background <SnakeBackground />*/}
+      
 
       {/* Floating Animated Elements */}
       <motion.div
