@@ -85,7 +85,7 @@ function App() {
   return (
     <div>
       <BlobBackground />
-      <ScrollFloat/>
+      {/*<ScrollFloat/>*/}
       <Navbar />
       <Hero />
       <About />
