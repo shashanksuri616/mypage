@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Example data structure
+// Example data structure with all your skills and placeholder "waffle" content
 const skills = [
   {
     name: "React",
     icon: "⚛️",
-    pitch: "Built multiple SPAs and dashboards using React and hooks. Comfortable with advanced patterns and performance optimization.",
+    pitch: "Built several interactive SPAs and dashboards using React, hooks, and context. I love component-driven development and have used React in both personal and team projects.",
     certificates: [
       { name: "React Advanced", img: "/certificates/react-advanced.png", file: "/certificates/react-advanced.pdf" }
     ],
@@ -15,9 +15,20 @@ const skills = [
     ]
   },
   {
+    name: "Node.js",
+    icon: "🟩",
+    pitch: "Developed RESTful APIs and real-time apps using Node.js and Express. Enjoy building scalable backend services and integrating with databases.",
+    certificates: [
+      { name: "Node.js Bootcamp", img: "/certificates/node-bootcamp.png", file: "/certificates/node-bootcamp.pdf" }
+    ],
+    projects: [
+      { name: "Realtime Chat", link: "#projects", desc: "A chat app using Node.js, Socket.io, and MongoDB." }
+    ]
+  },
+  {
     name: "Python",
     icon: "🐍",
-    pitch: "Used Python for data science, automation, and backend APIs. Strong with pandas, NumPy, and Flask.",
+    pitch: "Used Python for data science, scripting, and backend APIs. Strong with pandas, NumPy, and Flask. I automate all the boring stuff.",
     certificates: [
       { name: "Deep Learning Specialization", img: "/certificates/deep-learning.png", file: "/certificates/deep-learning.pdf" }
     ],
@@ -25,7 +36,73 @@ const skills = [
       { name: "ML Spark", link: "#projects", desc: "Award-winning ML project using Python and scikit-learn." }
     ]
   },
-  // ...add more skills
+  {
+    name: "MongoDB",
+    icon: "🍃",
+    pitch: "Designed flexible schemas and built scalable apps with MongoDB. Love the freedom of NoSQL for rapid prototyping.",
+    certificates: [
+      { name: "MongoDB Basics", img: "/certificates/mongodb-basics.png", file: "/certificates/mongodb-basics.pdf" }
+    ],
+    projects: [
+      { name: "Task Manager", link: "#projects", desc: "A productivity app using MongoDB, Express, and React." }
+    ]
+  },
+  {
+    name: "Linux",
+    icon: "🐧",
+    pitch: "Confident with Linux CLI, scripting, and server management. I break things, fix them, and automate the rest.",
+    certificates: [
+      { name: "Linux Essentials", img: "/certificates/linux-essentials.png", file: "/certificates/linux-essentials.pdf" }
+    ],
+    projects: [
+      { name: "Server Setup Scripts", link: "#projects", desc: "Automated server provisioning with Bash and Python." }
+    ]
+  },
+  {
+    name: "Machine Learning",
+    icon: "🤖",
+    pitch: "Built and deployed ML models for competitions and real-world data. I enjoy feature engineering and model tuning.",
+    certificates: [
+      { name: "ML Spark - Tvastr’25", img: "/certificates/ml-spark-tvastr25.png", file: "/certificates/ml-spark-tvastr25.pdf" }
+    ],
+    projects: [
+      { name: "Fake Job Detector", link: "#projects", desc: "ML Quest Hackathon project for identifying fake job listings." }
+    ]
+  },
+  {
+    name: "Tailwind CSS",
+    icon: "🌈",
+    pitch: "Rapidly prototype and style modern UIs with Tailwind. Utility-first CSS is my jam.",
+    certificates: [
+      { name: "Tailwind Mastery", img: "/certificates/tailwind-mastery.png", file: "/certificates/tailwind-mastery.pdf" }
+    ],
+    projects: [
+      { name: "Landing Page", link: "#projects", desc: "A beautiful, responsive landing page built with Tailwind." }
+    ]
+  },
+  {
+    name: "Framer Motion",
+    icon: "🎞️",
+    pitch: "Bring interfaces to life with smooth, interactive animations using Framer Motion.",
+    certificates: [
+      { name: "Framer Motion Essentials", img: "/certificates/framer-motion.png", file: "/certificates/framer-motion.pdf" }
+    ],
+    projects: [
+      { name: "Animated Portfolio", link: "#projects", desc: "This portfolio, with all the motion magic." }
+    ]
+  },
+  {
+    name: "Azure",
+    icon: "☁️",
+    pitch: "Deployed cloud apps and services on Azure. Familiar with Azure Fundamentals and cloud best practices.",
+    certificates: [
+      { name: "Microsoft Azure Fundamentals", img: "/certificates/azure-fundamentals.png", file: "/certificates/Azure.pdf" }
+    ],
+    projects: [
+      { name: "Cloud Resume", link: "#projects", desc: "Resume hosted on Azure Blob Storage." }
+    ]
+  },
+  // Add more as needed, or replace "waffle" with real content later!
 ];
 
 const Skills = () => {
