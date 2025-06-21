@@ -10,13 +10,25 @@ const ScrollFloat = () => {
   const pathRef = useRef();
   const [dotPos, setDotPos] = useState({ x: 0, y: 0 });
   const [progress, setProgress] = useState(0);
+  const [velocity, setVelocity] = useState(0);
+  const lastProgress = useRef(0);
 
   useEffect(() => {
+    let lastTime = performance.now();
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       const docHeight = document.body.scrollHeight - window.innerHeight;
       const prog = Math.min(scrollY / docHeight, 1);
       setProgress(prog);
+
+      // Velocity calculation
+      const now = performance.now();
+      const dt = Math.max(now - lastTime, 1);
+      const v = (prog - lastProgress.current) / (dt / 1000);
+      setVelocity(v);
+      lastProgress.current = prog;
+      lastTime = now;
+
       const path = pathRef.current;
       if (path) {
         const length = path.getTotalLength();
@@ -33,6 +45,30 @@ const ScrollFloat = () => {
   const wiggle = Math.sin(progress * Math.PI * 6) * 12; // 3 wiggles
   const rotation = progress * 360;
 
+  // Velocity-based scaling for stretch/squash
+  const scaleY = 1 + Math.min(Math.abs(velocity) * 2, 0.4);
+  const scaleX = 1 - Math.min(Math.abs(velocity) * 1.2, 0.2);
+
+  // Trail effect: render faded dots behind the main dot
+  const trail = [];
+  for (let t = 0.1; t <= 0.5; t += 0.1) {
+    const trailProg = Math.max(progress - t, 0);
+    if (pathRef.current) {
+      const length = pathRef.current.getTotalLength();
+      const pos = getPointAtLength(pathRef.current, trailProg * length);
+      trail.push(
+        <circle
+          key={t}
+          cx={pos.x}
+          cy={pos.y}
+          r="8"
+          fill="#fbbf24"
+          opacity={0.15 + (0.15 * (1 - t * 2))}
+        />
+      );
+    }
+  }
+
   return (
     <svg
       width="80"
@@ -47,19 +83,29 @@ const ScrollFloat = () => {
       }}
       className="lg:block"
     >
-      {/* Straight vertical path */}
+      {/* Animated gradient path */}
+      <defs>
+        <linearGradient id="scrollPathGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#a78bfa" />
+          <stop offset={`${progress * 100}%`} stopColor="#fbbf24" />
+          <stop offset="100%" stopColor="#a78bfa" />
+        </linearGradient>
+      </defs>
       <path
         ref={pathRef}
         d="M40,20 L40,400"
         fill="none"
-        stroke="#a78bfa"
-        strokeWidth="4"
-        opacity="0.5"
+        stroke="url(#scrollPathGrad)"
+        strokeWidth="5"
+        opacity="0.7"
+        style={{ transition: "stroke 0.3s" }}
       />
-      {/* Follower dot with wiggle and rotation */}
+      {/* Trail */}
+      {trail}
+      {/* Follower dot with wiggle, rotation, and stretch/squash */}
       <g
         style={{
-          transform: `translate(${wiggle}px, 0px) rotate(${rotation}deg)`,
+          transform: `translate(${wiggle}px, 0px) rotate(${rotation}deg) scale(${scaleX},${scaleY})`,
           transformOrigin: `${dotPos.x}px ${dotPos.y}px`,
           transition: "transform 0.1s cubic-bezier(.4,0,.2,1)",
         }}
@@ -80,7 +126,7 @@ const ScrollFloat = () => {
           strokeWidth="3"
           style={{ filter: "drop-shadow(0 2px 8px #fbbf24aa)" }}
         />
-        {/* X factor: a sparkle/star that rotates with the dot */}
+        {/* Sparkle/star */}
         <polygon
           points={`
             ${dotPos.x},${dotPos.y - 7}
