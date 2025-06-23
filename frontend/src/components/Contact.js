@@ -73,7 +73,6 @@ const Contact = () => {
       transition={{ duration: 1 }}
     >
       {/* Decorative Background Blobs */}
-  
       <motion.div
         className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tr from-indigo-800 via-purple-800 to-gray-900 rounded-full blur-3xl opacity-20 pointer-events-none"
         initial={{ scale: 0.8, opacity: 0 }}
@@ -81,68 +80,74 @@ const Contact = () => {
         transition={{ duration: 1.2, delay: 0.2 }}
       />
 
-      <div className="max-w-4xl mx-auto relative z-10 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md rounded-2xl shadow-lg p-10 border border-transparent">
-        <h2 className="text-5xl font-bold mb-12 text-center">Get in Touch</h2>
-        <p className="text-lg text-center mb-12">
-          Have a question or want to work together? Feel free to reach out!
-        </p>
-        <motion.form
-          className="grid grid-cols-1 gap-6"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          onSubmit={handleSubmit}
-        >
-          <input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            type="text"
-            placeholder="Your Name"
-            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-          />
-          <input
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            type="email"
-            placeholder="Your Email"
-            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-          />
-          <textarea
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            placeholder="Your Message"
-            rows="5"
-            className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-          ></textarea>
-          <motion.button
-            type="submit"
-            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-all duration-300"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Send Message
-          </motion.button>
-        </motion.form>
-        {status && <p className="mt-4 text-center">{status}</p>}
-        <div className="mt-12 text-center">
-          <p className="text-lg mb-4">Or connect with me on:</p>
-          <div className="flex justify-center space-x-8">
-            {socials.map(s => (
-              <a
-                key={s.name}
-                href={s.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-all duration-300"
-                aria-label={s.name}
-              >
-                {s.icon}
-              </a>
-            ))}
+      <div className="max-w-4xl mx-auto relative z-10 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md rounded-2xl shadow-lg p-0 border border-transparent flex flex-col md:flex-row gap-10">
+        {/* Left: Contact Info & Socials */}
+        <div className="flex-1 flex flex-col justify-center items-center py-10 px-4 md:px-8">
+          <h2 className="text-5xl font-bold mb-8 text-center">Get in Touch</h2>
+          <p className="text-lg text-center mb-8">
+            Have a question or want to work together? Feel free to reach out!
+          </p>
+          <div className="mt-4 text-center">
+            <p className="text-lg mb-4">Or connect with me on:</p>
+            <div className="flex justify-center space-x-8">
+              {socials.map(s => (
+                <a
+                  key={s.name}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-all duration-300"
+                  aria-label={s.name}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
           </div>
+        </div>
+        {/* Right: Contact Form */}
+        <div className="flex-1 flex flex-col justify-center py-10 px-4 md:px-8">
+          <motion.form
+            className="grid grid-cols-1 gap-6"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            onSubmit={handleSubmit}
+          >
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              type="text"
+              placeholder="Your Name"
+              className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+            />
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              type="email"
+              placeholder="Your Email"
+              className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+            />
+            <textarea
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              placeholder="Your Message"
+              rows="5"
+              className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+            ></textarea>
+            <motion.button
+              type="submit"
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-all duration-300"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Send Message
+            </motion.button>
+          </motion.form>
+          {status && <p className="mt-4 text-center">{status}</p>}
         </div>
       </div>
     </motion.section>
