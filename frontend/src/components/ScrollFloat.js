@@ -41,29 +41,29 @@ const ScrollFloat = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // X factor: dot wiggles horizontally as you scroll, and rotates
-  const wiggle = Math.sin(progress * Math.PI * 6) * 12; // 3 wiggles
-  const rotation = progress * 360;
+  // Enhanced animation: dot pulses with scroll, rotates, and leaves a fading trail with color shift
+  const wiggle = Math.sin(progress * Math.PI * 8) * 16; // More wiggles
+  const rotation = progress * 540; // Faster rotation
+  const pulse = 1 + Math.abs(Math.sin(progress * Math.PI * 4 + velocity * 10)) * 0.18 + Math.min(Math.abs(velocity) * 2, 0.3);
+  const scaleY = pulse;
+  const scaleX = 1 - (pulse - 1) * 0.5;
 
-  // Velocity-based scaling for stretch/squash
-  const scaleY = 1 + Math.min(Math.abs(velocity) * 2, 0.4);
-  const scaleX = 1 - Math.min(Math.abs(velocity) * 1.2, 0.2);
-
-  // Trail effect: render faded dots behind the main dot
+  // Trail effect: render faded, color-shifting dots behind the main dot
   const trail = [];
   for (let t = 0.1; t <= 0.5; t += 0.1) {
     const trailProg = Math.max(progress - t, 0);
     if (pathRef.current) {
       const length = pathRef.current.getTotalLength();
       const pos = getPointAtLength(pathRef.current, trailProg * length);
+      const hue = 48 + t * 180; // Color shift for trail
       trail.push(
         <circle
           key={t}
           cx={pos.x}
           cy={pos.y}
-          r="8"
-          fill="#fbbf24"
-          opacity={0.15 + (0.15 * (1 - t * 2))}
+          r={8 - t * 6}
+          fill={`hsl(${hue}, 92%, 60%)`}
+          opacity={0.12 + (0.13 * (1 - t * 2))}
         />
       );
     }
@@ -79,7 +79,7 @@ const ScrollFloat = () => {
         left: "2vw",
         zIndex: 5,
         pointerEvents: "none",
-        opacity: 0.95,
+        opacity: 0.97,
       }}
       className="lg:block"
     >
@@ -90,6 +90,10 @@ const ScrollFloat = () => {
           <stop offset={`${progress * 100}%`} stopColor="#fbbf24" />
           <stop offset="100%" stopColor="#a78bfa" />
         </linearGradient>
+        <radialGradient id="dotPulse" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fffbe9" />
+          <stop offset="100%" stopColor="#fbbf24" />
+        </radialGradient>
       </defs>
       <path
         ref={pathRef}
@@ -102,20 +106,20 @@ const ScrollFloat = () => {
       />
       {/* Trail */}
       {trail}
-      {/* Follower dot with wiggle, rotation, and stretch/squash */}
+      {/* Follower dot with enhanced animation */}
       <g
         style={{
           transform: `translate(${wiggle}px, 0px) rotate(${rotation}deg) scale(${scaleX},${scaleY})`,
           transformOrigin: `${dotPos.x}px ${dotPos.y}px`,
-          transition: "transform 0.1s cubic-bezier(.4,0,.2,1)",
+          transition: "transform 0.12s cubic-bezier(.4,0,.2,1)",
         }}
       >
         <circle
           cx={dotPos.x}
           cy={dotPos.y}
-          r="13"
-          fill="#fff"
-          opacity="0.7"
+          r="15"
+          fill="url(#dotPulse)"
+          opacity="0.8"
         />
         <circle
           cx={dotPos.x}
@@ -124,18 +128,18 @@ const ScrollFloat = () => {
           fill="#fbbf24"
           stroke="#fff"
           strokeWidth="3"
-          style={{ filter: "drop-shadow(0 2px 8px #fbbf24aa)" }}
+          style={{ filter: "drop-shadow(0 2px 12px #fbbf24bb)" }}
         />
         {/* Sparkle/star */}
         <polygon
           points={`
-            ${dotPos.x},${dotPos.y - 7}
-            ${dotPos.x + 2},${dotPos.y}
-            ${dotPos.x},${dotPos.y + 7}
-            ${dotPos.x - 2},${dotPos.y}
+            ${dotPos.x},${dotPos.y - 8}
+            ${dotPos.x + 2.5},${dotPos.y}
+            ${dotPos.x},${dotPos.y + 8}
+            ${dotPos.x - 2.5},${dotPos.y}
           `}
           fill="#a78bfa"
-          opacity="0.8"
+          opacity="0.85"
         />
       </g>
     </svg>
