@@ -13,13 +13,14 @@ A modern, minimal, and dynamic personal portfolio website built using the **MERN
 
 - Responsive, animated hero section with gradient backgrounds and glassmorphism
 - Floating, interactive navbar with dark/light theme toggle (always visible)
+- **Animated scroll-follow element** on the left for extra flair
 - Animated, blurred background blobs that follow the mouse and show through sections
 - Smooth scroll navigation between sections
-- Animated sections: About, Skills, Timeline, Projects, Certificates, Contact
+- Animated sections: About, Skills (with modal references to certificates/projects), Timeline (linked to projects), Projects, Certificates, Contact
 - Dark mode support (toggle in top-right corner)
 - Contact form with social links (LinkedIn, GitHub, X, Gmail, etc.)
 - Clean, minimal, and modern UI
-- Timeline and Projects are linked: clicking a timeline project scrolls to the project card
+- Timeline and Projects are linked: clicking a timeline project scrolls to and highlights the project card
 - Certificates and resume are served dynamically from the backend
 
 ---
@@ -90,6 +91,7 @@ src/
     Projects.js
     Certificates.js
     Contact.js
+    ScrollFloat.js
   App.js
   index.js
   ...
@@ -106,7 +108,9 @@ src/
 - **Add sections:**  
   Duplicate and modify components as needed.
 - **Serve your certificates/resume:**  
-  Place your files in the backend/static folder and update the API endpoints.
+  Place your files in the backend/public/certificates folder and update the API endpoints.
+- **Skills modals:**  
+  Add references to certificates and projects for each skill in `Skills.js` for a more convincing showcase.
 
 ---
 
