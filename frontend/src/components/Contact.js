@@ -83,13 +83,13 @@ const Contact = () => {
       <div className="max-w-4xl mx-auto relative z-10 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md rounded-2xl shadow-lg p-0 border border-transparent flex flex-col md:flex-row gap-10">
         {/* Left: Contact Info & Socials */}
         <div className="flex-1 flex flex-col justify-center items-center py-10 px-4 md:px-8">
-          <h2 className="text-5xl font-bold mb-8 text-center">Get in Touch</h2>
-          <p className="text-lg text-center mb-8">
-            Have a question or want to work together? Feel free to reach out!
+          <h2 className="text-5xl font-bold mb-4 text-center">Get in Touch</h2>
+          <p className="text-lg text-center mb-6">
+            Have a question, want to collaborate, or just want to say hi? <br />
+            Drop a message or connect with me on your favorite platform!
           </p>
-          <div className="mt-4 text-center">
-            <p className="text-lg mb-4">Or connect with me on:</p>
-            <div className="flex justify-center space-x-8">
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex justify-center space-x-8 mb-2">
               {socials.map(s => (
                 <a
                   key={s.name}
@@ -102,6 +102,9 @@ const Contact = () => {
                   {s.icon}
                 </a>
               ))}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+              <span className="font-semibold">Email:</span> <a href="mailto:shashank.suri616@gmail.com" className="underline hover:text-purple-600">shashank.suri616@gmail.com</a>
             </div>
           </div>
         </div>
@@ -121,6 +124,7 @@ const Contact = () => {
               type="text"
               placeholder="Your Name"
               className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              required
             />
             <input
               name="email"
@@ -129,6 +133,7 @@ const Contact = () => {
               type="email"
               placeholder="Your Email"
               className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              required
             />
             <textarea
               name="message"
@@ -137,6 +142,7 @@ const Contact = () => {
               placeholder="Your Message"
               rows="5"
               className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              required
             ></textarea>
             <motion.button
               type="submit"
