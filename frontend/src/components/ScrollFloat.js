@@ -8,54 +8,69 @@ function getPointAtLength(path, length) {
 
 const ScrollFloat = () => {
   const pathRef = useRef();
-  const [dotPos, setDotPos] = useState({ x: 0, y: 0 });
+  const [dotPos, setDotPos] = useState({ x: 40, y: 20 });
   const [progress, setProgress] = useState(0);
   const [velocity, setVelocity] = useState(0);
   const lastProgress = useRef(0);
 
+  // Smooth scroll animation using requestAnimationFrame
   useEffect(() => {
     let lastTime = performance.now();
+    let animFrame;
+    let targetProg = 0;
+    let currentProg = 0;
+
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       const docHeight = document.body.scrollHeight - window.innerHeight;
-      const prog = Math.min(scrollY / docHeight, 1);
-      setProgress(prog);
+      targetProg = Math.min(scrollY / docHeight, 1);
+    };
+
+    const animate = () => {
+      // Smoothly interpolate progress
+      currentProg += (targetProg - currentProg) * 0.18;
+      setProgress(currentProg);
 
       // Velocity calculation
       const now = performance.now();
       const dt = Math.max(now - lastTime, 1);
-      const v = (prog - lastProgress.current) / (dt / 1000);
+      const v = (currentProg - lastProgress.current) / (dt / 1000);
       setVelocity(v);
-      lastProgress.current = prog;
+      lastProgress.current = currentProg;
       lastTime = now;
 
       const path = pathRef.current;
       if (path) {
         const length = path.getTotalLength();
-        const pos = getPointAtLength(path, prog * length);
+        const pos = getPointAtLength(path, currentProg * length);
         setDotPos(pos);
       }
+      animFrame = requestAnimationFrame(animate);
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    animate();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(animFrame);
+    };
   }, []);
 
-  // Enhanced animation: dot pulses with scroll, rotates, and leaves a fading trail with color shift
-  const wiggle = Math.sin(progress * Math.PI * 8) * 16; // More wiggles
-  const rotation = progress * 540; // Faster rotation
+  // Enhanced animation: dot pulses, rotates, and leaves a fading, color-shifting trail
+  const wiggle = Math.sin(progress * Math.PI * 8) * 16;
+  const rotation = progress * 540;
   const pulse = 1 + Math.abs(Math.sin(progress * Math.PI * 4 + velocity * 10)) * 0.18 + Math.min(Math.abs(velocity) * 2, 0.3);
   const scaleY = pulse;
   const scaleX = 1 - (pulse - 1) * 0.5;
 
-  // Trail effect: render faded, color-shifting dots behind the main dot
+  // Trail effect: faded, color-shifting dots behind the main dot
   const trail = [];
   for (let t = 0.1; t <= 0.5; t += 0.1) {
     const trailProg = Math.max(progress - t, 0);
     if (pathRef.current) {
       const length = pathRef.current.getTotalLength();
       const pos = getPointAtLength(pathRef.current, trailProg * length);
-      const hue = 48 + t * 180; // Color shift for trail
+      const hue = 48 + t * 180;
       trail.push(
         <circle
           key={t}
