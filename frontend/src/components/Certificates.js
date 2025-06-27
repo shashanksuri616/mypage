@@ -5,30 +5,56 @@ const certificates = [
   {
     name: "Deep Learning Specialization",
     org: "Coursera",
-    img: "https://img-certificate-url.com/deep-learning.png",
-    link: "#",
-    desc: "A comprehensive specialization covering neural networks, CNNs, RNNs, and more."
+    img: "/certificates/deep-learning.png",
+    link: "/certificates/deep-learning.pdf",
+    desc: "A comprehensive specialization covering neural networks, CNNs, RNNs, and more. Completed Andrew Ng’s Deep Learning Specialization with hands-on projects.",
+    skills: ["Python", "TensorFlow", "Neural Networks"],
+    year: "2021"
   },
   {
     name: "Linux Foundation Certified SysAdmin",
     org: "Linux Foundation",
-    img: "https://img-certificate-url.com/linux-foundation.png",
-    link: "#",
-    desc: "Certification for advanced Linux system administration skills."
+    img: "/certificates/linux-foundation.png",
+    link: "/certificates/linux-foundation.pdf",
+    desc: "Certification for advanced Linux system administration skills. Demonstrated proficiency in shell scripting, networking, and troubleshooting.",
+    skills: ["Linux", "Shell Scripting", "System Admin"],
+    year: "2022"
   },
   {
-    name: "AWS Certified Solutions Architect",
-    org: "Amazon Web Services",
-    img: "https://img-certificate-url.com/aws-solutions-architect.png",
-    link: "#",
-    desc: "Credential for designing and deploying scalable systems on AWS."
+    name: "ML Quest Hackathon (4th Place)",
+    org: "IEEE CIS SBC, GHRCE",
+    img: "/certificates/ml-quest-hackathon.png",
+    link: "/certificates/ml-quest-hackathon.pdf",
+    desc: "Identified fake job listings using ML. Placed 4th in a national hackathon. Led a team, built a classifier, and presented findings to industry judges.",
+    skills: ["Machine Learning", "NLP", "Teamwork"],
+    year: "2022"
+  },
+  {
+    name: "ML Spark - Tvastr’25 (2nd Place)",
+    org: "University of Hyderabad",
+    img: "/certificates/ml-spark-tvastr25.png",
+    link: "/certificates/ml-spark-tvastr25.pdf",
+    desc: "Secured 2nd place in ML Spark at Tvastr’25 Analytics Fest. Developed a predictive analytics solution for real-world business data.",
+    skills: ["Analytics", "Python", "Presentation"],
+    year: "2022"
+  },
+  {
+    name: "Microsoft Azure Fundamentals",
+    org: "Microsoft",
+    img: "/certificates/azure-fundamentals.png",
+    link: "/certificates/Azure.pdf",
+    desc: "Certified in Microsoft Azure Fundamentals, demonstrating foundational knowledge of cloud services and Azure best practices.",
+    skills: ["Azure", "Cloud", "DevOps"],
+    year: "2023"
   },
   {
     name: "Google Data Analytics Professional",
     org: "Google",
-    img: "https://img-certificate-url.com/google-data-analytics.png",
-    link: "#",
-    desc: "Covers data cleaning, analysis, and visualization using Google tools."
+    img: "/certificates/google-data-analytics.png",
+    link: "/certificates/google-data-analytics.pdf",
+    desc: "Covers data cleaning, analysis, and visualization using Google tools. Completed hands-on projects with real datasets.",
+    skills: ["Data Analysis", "Google Sheets", "Visualization"],
+    year: "2023"
   },
 ];
 
@@ -68,6 +94,12 @@ const Certificates = () => {
             <img src={cert.img} alt={cert.name} className="w-full h-36 object-contain mb-4 rounded" />
             <div className="font-semibold text-lg">{cert.name}</div>
             <div className="text-purple-600">{cert.org}</div>
+            <div className="text-xs text-gray-500 mt-1">{cert.year}</div>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {cert.skills.map(skill => (
+                <span key={skill} className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 px-2 py-0.5 rounded text-xs">{skill}</span>
+              ))}
+            </div>
           </motion.a>
         ))}
       </div>
@@ -100,6 +132,12 @@ const Certificates = () => {
               <img src={selected.img} alt={selected.name} className="w-full h-40 object-contain mb-4 rounded" />
               <div className="font-bold text-xl mb-2">{selected.name}</div>
               <div className="text-purple-600 mb-2">{selected.org}</div>
+              <div className="text-xs text-gray-500 mb-2">{selected.year}</div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {selected.skills.map(skill => (
+                  <span key={skill} className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 px-2 py-0.5 rounded text-xs">{skill}</span>
+                ))}
+              </div>
               <div className="text-gray-700 dark:text-gray-300">{selected.desc}</div>
               <a
                 href={selected.link}
