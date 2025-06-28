@@ -43,18 +43,34 @@ const ThemeToggle = () => {
 const Navbar = () => {
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
+  const [active, setActive] = useState(navItems[0].id);
 
+  // Highlight nav item based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
       if (currentY < 80) {
-        setShow(true); // Always show at the top
+        setShow(true);
       } else if (currentY > lastScrollY.current) {
-        setShow(false); // Scrolling down, hide
+        setShow(false);
       } else {
-        setShow(true); // Scrolling up, show
+        setShow(true);
       }
       lastScrollY.current = currentY;
+
+      // Section highlight logic
+      let found = navItems[0].id;
+      for (const item of navItems) {
+        const el = document.getElementById(item.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 120 && rect.bottom > 120) {
+            found = item.id;
+            break;
+          }
+        }
+      }
+      setActive(found);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -64,21 +80,27 @@ const Navbar = () => {
     <>
       <AnimatePresence>
         {show && (
-          
           <motion.nav
             key="navbar"
             initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -80, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} // <-- smoother and more natural
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-6 inset-x-0 z-50 flex justify-center"
           >
             <div className="flex gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-full shadow-lg px-6 py-2 border border-gray-200 dark:border-gray-700">
               {navItems.map(item => (
                 <motion.button
                   key={item.id}
-                  onClick={() => document.getElementById(item.id).scrollIntoView({ behavior: "smooth" })}
-                  className="px-4 py-2 rounded-full font-semibold text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-700 dark:hover:text-purple-300 transition-all focus:outline-none"
+                  onClick={() => {
+                    document.getElementById(item.id).scrollIntoView({ behavior: "smooth" });
+                    setActive(item.id);
+                  }}
+                  className={`px-4 py-2 rounded-full font-semibold transition-all focus:outline-none
+                    ${active === item.id
+                      ? "bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 shadow"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-700 dark:hover:text-purple-300"}
+                  `}
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.96 }}
                 >
