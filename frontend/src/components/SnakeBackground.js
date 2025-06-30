@@ -182,21 +182,41 @@ const SnakeBackground = () => {
         ctx.globalAlpha = 1;
         ctx.fill();
 
-        // Sparkle effect for one snake
+        // Enhanced sparkle and animated face for one snake
         if (snake.sparkle) {
           ctx.save();
           ctx.translate(head.x, head.y);
           ctx.rotate(Date.now() / 600);
-          for (let j = 0; j < 6; j++) {
+
+          // Sparkle rays
+          for (let j = 0; j < 8; j++) {
             ctx.beginPath();
-            ctx.moveTo(0, -13);
-            ctx.lineTo(0, -18);
+            ctx.moveTo(0, -14);
+            ctx.lineTo(0, -22 - Math.sin(Date.now() / 400 + j) * 2);
             ctx.strokeStyle = "rgba(168,139,250,0.7)";
-            ctx.lineWidth = 2.2;
+            ctx.lineWidth = 2.1;
             ctx.globalAlpha = 0.7;
             ctx.stroke();
-            ctx.rotate(Math.PI / 3);
+            ctx.rotate(Math.PI / 4);
           }
+
+          // Cute animated face (eyes blink)
+          ctx.rotate(-Date.now() / 600); // reset rotation
+          ctx.beginPath();
+          ctx.arc(-4, -2, 1.5, 0, Math.PI * 2);
+          ctx.arc(4, -2, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = "#222";
+          ctx.globalAlpha = 0.9 - 0.5 * Math.abs(Math.sin(Date.now() / 400));
+          ctx.fill();
+
+          // Smile
+          ctx.beginPath();
+          ctx.arc(0, 3, 3, 0, Math.PI, false);
+          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = "#333";
+          ctx.globalAlpha = 0.7;
+          ctx.stroke();
+
           ctx.restore();
         }
 
