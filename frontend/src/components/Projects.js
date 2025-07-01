@@ -3,52 +3,58 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const projects = [
   {
-    id: "project-one",
-    title: "Project One",
-    desc: "UI/UX & Development",
-    img: "https://via.placeholder.com/400x200?text=Project+One",
-    details: "A modern UI/UX project with a focus on accessibility and performance.",
-    link: "#"
-  },
-  {
-    id: "project-two",
-    title: "Project Two",
-    desc: "E-commerce Platform",
-    img: "https://via.placeholder.com/400x200?text=Project+Two",
-    details: "A scalable e-commerce platform with payment integration and admin dashboard.",
-    link: "#"
-  },
-  {
-    id: "project-three",
-    title: "Project Three",
-    desc: "Portfolio Website",
-    img: "https://via.placeholder.com/400x200?text=Project+Three",
-    details: "A personal portfolio website built with React, Tailwind, and Framer Motion.",
-    link: "#"
-  },
-  {
-    id: "ml-flood",
-    title: "Project Four",
-    desc: "ML Flood Analysis",
-    img: "https://via.placeholder.com/400x200?text=Project+Four",
-    details: "Machine learning models for flood prediction and analysis using satellite data.",
-    link: "#"
-  },
-  {
     id: "llm-lung",
-    title: "Project Five",
-    desc: "LLM Lung Disease Detector",
-    img: "https://via.placeholder.com/400x200?text=Project+Five",
-    details: "A deep learning app for detecting lung diseases from X-ray images.",
-    link: "#"
+    title: "LLM Lung Disease Detector",
+    desc: "AI-powered tool for lung disease detection from X-rays.",
+    img: "/projects/llm-lung.png",
+    details: "Built a deep learning app that predicts lung diseases from X-ray images using large language models and explainable AI. Integrated a user-friendly interface for doctors and patients.",
+    tech: ["Python", "PyTorch", "Transformers", "Streamlit"],
+    link: "https://github.com/shashanksuri616/llm-lung-disease-detector"
   },
   {
     id: "diabetes-app",
-    title: "Project Six",
-    desc: "Diabetes Prediction App",
-    img: "https://via.placeholder.com/400x200?text=Project+Six",
-    details: "A web app that predicts diabetes risk using user input and ML models.",
-    link: "#"
+    title: "Diabetes Prediction App",
+    desc: "Cross-platform app for diabetes risk prediction.",
+    img: "/projects/diabetes-app.png",
+    details: "Developed a React Native app using TensorFlow.js for instant diabetes risk assessment and lifestyle recommendations. Deployed for both Android and web.",
+    tech: ["React Native", "TensorFlow.js", "Expo"],
+    link: "https://github.com/shashanksuri616/diabetes-predictor"
+  },
+  {
+    id: "ml-flood",
+    title: "ML Flood Analysis",
+    desc: "Satellite-based flood prediction and analysis.",
+    img: "/projects/ml-flood.png",
+    details: "Created ML models to predict and analyze flood risk using satellite data. Visualized results with interactive dashboards for researchers.",
+    tech: ["Python", "scikit-learn", "Pandas", "Dash"],
+    link: "https://github.com/shashanksuri616/flood-ml"
+  },
+  {
+    id: "ml-quest",
+    title: "Fake Job Detector (ML Quest Hackathon)",
+    desc: "Placed 4th in national hackathon for fake job detection.",
+    img: "/projects/ml-quest.png",
+    details: "Led a team to build an NLP classifier for identifying fake job listings. Used feature engineering and ensemble models. Presented to industry judges.",
+    tech: ["Python", "NLP", "scikit-learn"],
+    link: "https://github.com/shashanksuri616/fake-job-detector"
+  },
+  {
+    id: "ml-spark",
+    title: "ML Spark - Tvastr’25",
+    desc: "2nd place at Tvastr’25 Analytics Fest.",
+    img: "/projects/ml-spark.png",
+    details: "Developed a predictive analytics solution for business data. Collaborated with peers and presented at the University of Hyderabad.",
+    tech: ["Python", "Pandas", "Visualization"],
+    link: "https://github.com/shashanksuri616/ml-spark-tvastr25"
+  },
+  {
+    id: "portfolio",
+    title: "Portfolio Website",
+    desc: "This interactive portfolio site.",
+    img: "/projects/portfolio.png",
+    details: "Designed and built this portfolio using React, Tailwind CSS, and Framer Motion. Features animated backgrounds, smooth navigation, and a modern UI.",
+    tech: ["React", "Tailwind CSS", "Framer Motion"],
+    link: "https://github.com/shashanksuri616/mypage"
   },
 ];
 
@@ -85,6 +91,11 @@ const Projects = () => {
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2">{proj.title}</h3>
                 <p className="text-gray-600 dark:text-gray-300">{proj.desc}</p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {proj.tech && proj.tech.map(t => (
+                    <span key={t} className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 px-2 py-0.5 rounded text-xs">{t}</span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}
@@ -119,6 +130,11 @@ const Projects = () => {
               <img src={selected.img} alt={selected.title} className="w-full h-40 object-cover mb-4 rounded" />
               <div className="font-bold text-xl mb-2">{selected.title}</div>
               <div className="text-purple-600 mb-2">{selected.desc}</div>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {selected.tech && selected.tech.map(t => (
+                  <span key={t} className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 px-2 py-0.5 rounded text-xs">{t}</span>
+                ))}
+              </div>
               <div className="text-gray-700 dark:text-gray-300">{selected.details}</div>
               <a
                 href={selected.link}
