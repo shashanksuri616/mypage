@@ -70,6 +70,7 @@ const scoreCategories = [
 ];
 
 const diceUnicode = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+const diceColors = ["", "#fbbf24", "#a78bfa", "#38bdf8", "#f472b6", "#34d399", "#f87171"];
 
 const SimpleGame = () => {
   const [dice, setDice] = useState(rollDice());
@@ -103,19 +104,44 @@ const SimpleGame = () => {
     setTimeout(() => setSelectedCat(null), 600);
   };
 
+  const handleRefresh = () => {
+    setScores(Array(scoreCategories.length).fill(null));
+    setDice(rollDice());
+    setHeld([false, false, false, false, false]);
+    setRolls(0);
+    setSelectedCat(null);
+  };
+
   const totalScore = scores.reduce((a, b) => a + (b || 0), 0);
   const gameOver = scores.every(s => s !== null);
 
   return (
-    <div className="flex flex-col items-center">
-      <h3 className="text-2xl font-bold mb-2">Yahtzee Mini</h3>
+    <div className="flex flex-col items-center w-full h-full">
+      <div className="flex items-center justify-between w-full mb-2">
+        <h3 className="text-2xl font-bold mb-2 text-purple-700 dark:text-purple-300 flex-1 text-center">🎲 Yahtzee Mini</h3>
+        <button
+          className="ml-auto px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900 transition text-sm"
+          onClick={handleRefresh}
+          aria-label="Restart Game"
+        >
+          ⟳ Restart
+        </button>
+      </div>
       <div className="flex gap-3 mb-4">
         {dice.map((d, i) => (
           <button
             key={i}
-            className={`text-4xl w-14 h-14 rounded-lg border-2 transition-all duration-200
-              ${held[i] ? "border-purple-500 bg-purple-100 dark:bg-purple-900" : "border-gray-300 bg-white dark:bg-gray-800"}
+            className={`text-5xl w-16 h-16 rounded-xl border-4 shadow transition-all duration-200 flex items-center justify-center
+              ${held[i]
+                ? "border-purple-500 bg-purple-100 dark:bg-purple-900 scale-110"
+                : "border-gray-300 bg-white dark:bg-gray-800 hover:border-purple-300"}
+              ${canRoll ? "cursor-pointer" : "opacity-60"}
             `}
+            style={{
+              color: diceColors[d],
+              boxShadow: held[i] ? "0 0 0 4px #c4b5fd44" : undefined,
+              transition: "transform 0.15s, box-shadow 0.15s"
+            }}
             onClick={() => toggleHold(i)}
             disabled={!canRoll}
             aria-label={held[i] ? "Unhold die" : "Hold die"}
@@ -124,15 +150,20 @@ const SimpleGame = () => {
           </button>
         ))}
       </div>
-      <button
-        className="mb-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition disabled:opacity-50"
-        onClick={handleRoll}
-        disabled={!canRoll}
-      >
-        {rolls === 0 ? "Start" : rolls < 3 ? "Roll" : "No Rolls Left"}
-      </button>
-      <div className="w-full max-w-xs">
-        <table className="w-full text-sm mb-2">
+      <div className="flex items-center gap-4 mb-4">
+        <button
+          className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition disabled:opacity-50 shadow"
+          onClick={handleRoll}
+          disabled={!canRoll}
+        >
+          {rolls === 0 ? "Start" : rolls < 3 ? `Roll (${3 - rolls} left)` : "No Rolls Left"}
+        </button>
+        <span className="text-gray-600 dark:text-gray-300 text-sm">
+          Rolls: <span className="font-bold">{rolls}</span> / 3
+        </span>
+      </div>
+      <div className="w-full max-w-xs bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2">
+        <table className="w-full text-sm">
           <tbody>
             {scoreCategories.map((cat, i) => (
               <tr key={cat.name}>
@@ -156,7 +187,7 @@ const SimpleGame = () => {
             ))}
           </tbody>
         </table>
-        <div className="text-right font-bold text-lg">
+        <div className="text-right font-bold text-lg mt-2">
           Total: <span className="text-purple-700">{totalScore}</span>
         </div>
       </div>
@@ -166,12 +197,7 @@ const SimpleGame = () => {
           <div className="mb-2">Final Score: <span className="font-bold">{totalScore}</span></div>
           <button
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
-            onClick={() => {
-              setScores(Array(scoreCategories.length).fill(null));
-              setDice(rollDice());
-              setHeld([false, false, false, false, false]);
-              setRolls(0);
-            }}
+            onClick={handleRefresh}
           >
             Play Again
           </button>
