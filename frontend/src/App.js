@@ -12,6 +12,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AOS from 'aos';
 import 'aos/dist/aos.css';  
 import ScrollFloat from './components/ScrollFloat';
+import GameSideTab from './components/GameSideTab';
 
 const BlobBackground = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -86,6 +87,7 @@ function App() {
     <div>
       <BlobBackground />
       {/*<ScrollFloat/>*/}
+      <GameSideTab/>
       <Navbar />
       <Hero />
       <About />
