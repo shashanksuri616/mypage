@@ -6,12 +6,12 @@ function rollDice(num = 5) {
 }
 
 const scoreCategories = [
-  { name: "Ones", calc: dice => dice.filter(d => d === 1).length * 1 },
-  { name: "Twos", calc: dice => dice.filter(d => d === 2).length * 2 },
-  { name: "Threes", calc: dice => dice.filter(d => d === 3).length * 3 },
-  { name: "Fours", calc: dice => dice.filter(d => d === 4).length * 4 },
-  { name: "Fives", calc: dice => dice.filter(d => d === 5).length * 5 },
-  { name: "Sixes", calc: dice => dice.filter(d => d === 6).length * 6 },
+  { name: "Ones", calc: dice => dice.filter(d => d === 1).length * 1, help: "Sum of all 1s" },
+  { name: "Twos", calc: dice => dice.filter(d => d === 2).length * 2, help: "Sum of all 2s" },
+  { name: "Threes", calc: dice => dice.filter(d => d === 3).length * 3, help: "Sum of all 3s" },
+  { name: "Fours", calc: dice => dice.filter(d => d === 4).length * 4, help: "Sum of all 4s" },
+  { name: "Fives", calc: dice => dice.filter(d => d === 5).length * 5, help: "Sum of all 5s" },
+  { name: "Sixes", calc: dice => dice.filter(d => d === 6).length * 6, help: "Sum of all 6s" },
   {
     name: "Three of a Kind",
     calc: dice => {
@@ -19,7 +19,8 @@ const scoreCategories = [
         if (dice.filter(d => d === i).length >= 3) return dice.reduce((a, b) => a + b, 0);
       }
       return 0;
-    }
+    },
+    help: "At least three dice the same. Score: sum of all dice."
   },
   {
     name: "Four of a Kind",
@@ -28,14 +29,16 @@ const scoreCategories = [
         if (dice.filter(d => d === i).length >= 4) return dice.reduce((a, b) => a + b, 0);
       }
       return 0;
-    }
+    },
+    help: "At least four dice the same. Score: sum of all dice."
   },
   {
     name: "Full House",
     calc: dice => {
       const counts = [1,2,3,4,5,6].map(i => dice.filter(d => d === i).length);
       return counts.includes(3) && counts.includes(2) ? 25 : 0;
-    }
+    },
+    help: "Three of one number and two of another. Score: 25 points."
   },
   {
     name: "Small Straight",
@@ -50,27 +53,78 @@ const scoreCategories = [
         if (s.every(n => uniq.includes(n))) return 30;
       }
       return 0;
-    }
+    },
+    help: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
   },
   {
     name: "Large Straight",
     calc: dice => {
       const uniq = Array.from(new Set(dice)).sort().join("");
       return uniq === "12345" || uniq === "23456" ? 40 : 0;
-    }
+    },
+    help: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
   },
   {
     name: "Yahtzee",
-    calc: dice => (dice.every(d => d === dice[0]) ? 50 : 0)
+    calc: dice => (dice.every(d => d === dice[0]) ? 50 : 0),
+    help: "All five dice the same. Score: 50 points."
   },
   {
     name: "Chance",
-    calc: dice => dice.reduce((a, b) => a + b, 0)
+    calc: dice => dice.reduce((a, b) => a + b, 0),
+    help: "Any combination. Score: sum of all dice."
   }
 ];
 
 const diceUnicode = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 const diceColors = ["", "#fbbf24", "#a78bfa", "#38bdf8", "#f472b6", "#34d399", "#f87171"];
+
+const yahtzeeRules = [
+  {
+    name: "Ones–Sixes",
+    desc: "Score the sum of dice showing that number. (e.g., three 4s = 12 points in Fours)"
+  },
+  {
+    name: "Three of a Kind",
+    desc: "At least three dice the same. Score: sum of all dice."
+  },
+  {
+    name: "Four of a Kind",
+    desc: "At least four dice the same. Score: sum of all dice."
+  },
+  {
+    name: "Full House",
+    desc: "Three of one number and two of another. Score: 25 points."
+  },
+  {
+    name: "Small Straight",
+    desc: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
+  },
+  {
+    name: "Large Straight",
+    desc: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
+  },
+  {
+    name: "Yahtzee",
+    desc: "All five dice the same. Score: 50 points."
+  },
+  {
+    name: "Chance",
+    desc: "Any combination. Score: sum of all dice."
+  }
+];
+
+function getBestCategory(dice, scores) {
+  // Suggest the best available scoring option for the current dice
+  let best = { idx: null, score: -1 };
+  scoreCategories.forEach((cat, i) => {
+    if (scores[i] === null) {
+      const val = cat.calc(dice);
+      if (val > best.score) best = { idx: i, score: val };
+    }
+  });
+  return best.idx;
+}
 
 const SimpleGame = () => {
   const [dice, setDice] = useState(rollDice());
@@ -78,6 +132,8 @@ const SimpleGame = () => {
   const [rolls, setRolls] = useState(0);
   const [scores, setScores] = useState(Array(scoreCategories.length).fill(null));
   const [selectedCat, setSelectedCat] = useState(null);
+  const [showRules, setShowRules] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const canRoll = rolls < 3 && scores.some(s => s === null);
 
@@ -114,6 +170,9 @@ const SimpleGame = () => {
 
   const totalScore = scores.reduce((a, b) => a + (b || 0), 0);
   const gameOver = scores.every(s => s !== null);
+
+  // Suggest best scoring category
+  const bestCat = getBestCategory(dice, scores);
 
   return (
     <div className="flex flex-col items-center w-full h-full">
@@ -161,13 +220,44 @@ const SimpleGame = () => {
         <span className="text-gray-600 dark:text-gray-300 text-sm">
           Rolls: <span className="font-bold">{rolls}</span> / 3
         </span>
+        <button
+          className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-lg font-semibold text-xs hover:bg-purple-200 dark:hover:bg-purple-800 transition"
+          onClick={() => setShowHelp(h => !h)}
+        >
+          {showHelp ? "Hide Help" : "Show Help"}
+        </button>
       </div>
+      {showHelp && (
+        <div className="w-full max-w-xs mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
+          <ul className="list-disc pl-5 space-y-1">
+            {yahtzeeRules.map(rule => (
+              <li key={rule.name}>
+                <span className="font-bold">{rule.name}:</span> {rule.desc}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-2 text-[11px] text-gray-500">
+            Hold dice by clicking them. You get up to 3 rolls per turn. After rolling, select a category to score. Each category can be used only once.
+          </div>
+        </div>
+      )}
       <div className="w-full max-w-xs bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2">
         <table className="w-full text-sm">
           <tbody>
             {scoreCategories.map((cat, i) => (
               <tr key={cat.name}>
-                <td className="py-1">{cat.name}</td>
+                <td className="py-1 flex items-center gap-2">
+                  {cat.name}
+                  <span
+                    className="text-gray-400 cursor-pointer"
+                    title={cat.help}
+                  >&#9432;</span>
+                  {bestCat === i && canRoll === false && scores[i] === null && (
+                    <span className="ml-1 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs animate-pulse">
+                      Best
+                    </span>
+                  )}
+                </td>
                 <td className="text-right">
                   {scores[i] !== null ? (
                     <span className="font-bold text-purple-600">{scores[i]}</span>
@@ -175,6 +265,7 @@ const SimpleGame = () => {
                     <button
                       className={`px-2 py-0.5 rounded transition
                         ${selectedCat === i ? "bg-purple-200" : "hover:bg-purple-100 dark:hover:bg-purple-900"}
+                        ${bestCat === i && canRoll === false ? "ring-2 ring-green-400" : ""}
                       `}
                       onClick={() => handleScore(i)}
                       disabled={rolls === 0 || !canRoll}

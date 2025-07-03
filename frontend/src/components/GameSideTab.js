@@ -30,7 +30,7 @@ const GameSideTab = () => {
           >
             <motion.div
               className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 border border-purple-300 flex flex-col items-center"
-              style={{ width: 500, height: 600, maxWidth: "95vw", maxHeight: "95vh" }}
+              style={{ width: 900, height: 750, maxWidth: "98vw", maxHeight: "98vh" }}
               initial={{ scale: 0.92, y: 40 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.92, y: 40 }}
