@@ -132,7 +132,6 @@ const SimpleGame = () => {
   const [rolls, setRolls] = useState(0);
   const [scores, setScores] = useState(Array(scoreCategories.length).fill(null));
   const [selectedCat, setSelectedCat] = useState(null);
-  const [showRules, setShowRules] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
   const canRoll = rolls < 3 && scores.some(s => s === null);
@@ -174,6 +173,31 @@ const SimpleGame = () => {
   // Suggest best scoring category
   const bestCat = getBestCategory(dice, scores);
 
+  // Suggest which dice to hold for best category (simple heuristic)
+  function getSuggestedHolds() {
+    if (rolls === 0) return [];
+    if (bestCat == null) return [];
+    const cat = scoreCategories[bestCat];
+    if (["Ones","Twos","Threes","Fours","Fives","Sixes"].includes(cat.name)) {
+      // Hold dice matching the number
+      return dice.map(d => d === parseInt(cat.name[0]) ? true : false);
+    }
+    if (cat.name === "Yahtzee" || cat.name === "Three of a Kind" || cat.name === "Four of a Kind" || cat.name === "Full House") {
+      // Hold the most common value
+      let counts = [0,0,0,0,0,0,0];
+      dice.forEach(d => counts[d]++);
+      let maxVal = counts.indexOf(Math.max(...counts));
+      return dice.map(d => d === maxVal);
+    }
+    if (cat.name === "Small Straight" || cat.name === "Large Straight") {
+      // Hold unique dice in a straight
+      let uniq = Array.from(new Set(dice));
+      return dice.map(d => uniq.includes(d));
+    }
+    return [false, false, false, false, false];
+  }
+  const suggestedHolds = getSuggestedHolds();
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex items-center justify-between w-full mb-2">
@@ -193,7 +217,9 @@ const SimpleGame = () => {
             className={`text-5xl w-16 h-16 rounded-xl border-4 shadow transition-all duration-200 flex items-center justify-center
               ${held[i]
                 ? "border-purple-500 bg-purple-100 dark:bg-purple-900 scale-110"
-                : "border-gray-300 bg-white dark:bg-gray-800 hover:border-purple-300"}
+                : suggestedHolds[i]
+                  ? "border-green-400 bg-green-50 dark:bg-green-900 scale-105 animate-pulse"
+                  : "border-gray-300 bg-white dark:bg-gray-800 hover:border-purple-300"}
               ${canRoll ? "cursor-pointer" : "opacity-60"}
             `}
             style={{
@@ -238,6 +264,8 @@ const SimpleGame = () => {
           </ul>
           <div className="mt-2 text-[11px] text-gray-500">
             Hold dice by clicking them. You get up to 3 rolls per turn. After rolling, select a category to score. Each category can be used only once.
+            <br />
+            <span className="text-green-700">Green-highlighted dice</span> are suggested holds for the best scoring option.
           </div>
         </div>
       )}
