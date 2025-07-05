@@ -5,6 +5,21 @@ function rollDice(num = 5) {
   return Array.from({ length: num }, () => Math.ceil(Math.random() * 6));
 }
 
+// Helper for upper section bonus
+function upperSectionTotal(scores) {
+  return scores.slice(0, 6).reduce((a, b) => a + (b || 0), 0);
+}
+
+// Helper for Yahtzee bonus (multiple Yahtzees)
+function yahtzeeBonus(dice, scores) {
+  // If Yahtzee already scored with 50, and another Yahtzee is rolled, award 100 bonus
+  const yahtzeeIdx = 12;
+  if (scores[yahtzeeIdx] === 50 && dice.every(d => d === dice[0])) {
+    return 100;
+  }
+  return 0;
+}
+
 const scoreCategories = [
   { name: "Ones", calc: dice => dice.filter(d => d === 1).length * 1, help: "Sum of all 1s" },
   { name: "Twos", calc: dice => dice.filter(d => d === 2).length * 2, help: "Sum of all 2s" },
@@ -67,7 +82,7 @@ const scoreCategories = [
   {
     name: "Yahtzee",
     calc: dice => (dice.every(d => d === dice[0]) ? 50 : 0),
-    help: "All five dice the same. Score: 50 points."
+    help: "All five dice the same. Score: 50 points. Additional Yahtzees: +100 bonus each."
   },
   {
     name: "Chance",
@@ -81,8 +96,8 @@ const diceColors = ["", "#fbbf24", "#a78bfa", "#38bdf8", "#f472b6", "#34d399", "
 
 const yahtzeeRules = [
   {
-    name: "Ones–Sixes",
-    desc: "Score the sum of dice showing that number. (e.g., three 4s = 12 points in Fours)"
+    name: "Upper Section (Ones–Sixes)",
+    desc: "Score the sum of dice showing that number. If your total for these six categories is 63 or more, you earn a 35-point bonus."
   },
   {
     name: "Three of a Kind",
@@ -106,7 +121,7 @@ const yahtzeeRules = [
   },
   {
     name: "Yahtzee",
-    desc: "All five dice the same. Score: 50 points."
+    desc: "All five dice the same. Score: 50 points. Additional Yahtzees: +100 bonus each."
   },
   {
     name: "Chance",
@@ -133,6 +148,7 @@ const SimpleGame = () => {
   const [scores, setScores] = useState(Array(scoreCategories.length).fill(null));
   const [selectedCat, setSelectedCat] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [yahtzeeBonuses, setYahtzeeBonuses] = useState(0);
 
   const canRoll = rolls < 3 && scores.some(s => s === null);
 
@@ -149,7 +165,13 @@ const SimpleGame = () => {
 
   const handleScore = idx => {
     if (scores[idx] !== null) return;
-    const newScores = [...scores];
+    let newScores = [...scores];
+    let yahtzeeBonusPoints = 0;
+    // Yahtzee bonus: if Yahtzee already scored and another Yahtzee is rolled, +100
+    if (idx !== 12 && scores[12] === 50 && dice.every(d => d === dice[0])) {
+      yahtzeeBonusPoints = 100;
+      setYahtzeeBonuses(b => b + 100);
+    }
     newScores[idx] = scoreCategories[idx].calc(dice);
     setScores(newScores);
     setDice(rollDice());
@@ -157,6 +179,9 @@ const SimpleGame = () => {
     setRolls(1);
     setSelectedCat(idx);
     setTimeout(() => setSelectedCat(null), 600);
+    if (yahtzeeBonusPoints) {
+      setTimeout(() => alert("Yahtzee Bonus! +100 points"), 300);
+    }
   };
 
   const handleRefresh = () => {
@@ -165,9 +190,12 @@ const SimpleGame = () => {
     setHeld([false, false, false, false, false]);
     setRolls(0);
     setSelectedCat(null);
+    setYahtzeeBonuses(0);
   };
 
-  const totalScore = scores.reduce((a, b) => a + (b || 0), 0);
+  const upperTotal = upperSectionTotal(scores);
+  const upperBonus = upperTotal >= 63 ? 35 : 0;
+  const totalScore = scores.reduce((a, b) => a + (b || 0), 0) + upperBonus + yahtzeeBonuses;
   const gameOver = scores.every(s => s !== null);
 
   // Suggest best scoring category
@@ -266,6 +294,10 @@ const SimpleGame = () => {
             Hold dice by clicking them. You get up to 3 rolls per turn. After rolling, select a category to score. Each category can be used only once.
             <br />
             <span className="text-green-700">Green-highlighted dice</span> are suggested holds for the best scoring option.
+            <br />
+            <span className="text-blue-700">Upper section bonus:</span> Score 63+ in Ones–Sixes for +35 points.
+            <br />
+            <span className="text-yellow-700">Yahtzee bonus:</span> After your first Yahtzee, each extra Yahtzee is +100 points!
           </div>
         </div>
       )}
@@ -306,6 +338,17 @@ const SimpleGame = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-between text-xs mt-2">
+          <span>
+            Upper Total: <span className="font-bold">{upperTotal}</span>
+            {upperBonus > 0 && (
+              <span className="ml-2 text-green-700 font-bold">+35 Bonus!</span>
+            )}
+          </span>
+          <span>
+            Yahtzee Bonus: <span className="font-bold">{yahtzeeBonuses}</span>
+          </span>
+        </div>
         <div className="text-right font-bold text-lg mt-2">
           Total: <span className="text-purple-700">{totalScore}</span>
         </div>
