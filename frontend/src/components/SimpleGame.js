@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Utility to roll dice
 function rollDice(num = 5) {
@@ -149,13 +150,20 @@ const SimpleGame = () => {
   const [selectedCat, setSelectedCat] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [yahtzeeBonuses, setYahtzeeBonuses] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  const [rolling, setRolling] = useState(false);
+  const diceRefs = useRef([null, null, null, null, null]);
 
   const canRoll = rolls < 3 && scores.some(s => s === null);
 
   const handleRoll = () => {
     if (!canRoll) return;
-    setDice(dice.map((d, i) => held[i] ? d : Math.ceil(Math.random() * 6)));
-    setRolls(rolls + 1);
+    setRolling(true);
+    setTimeout(() => {
+      setDice(dice.map((d, i) => held[i] ? d : Math.ceil(Math.random() * 6)));
+      setRolls(rolls + 1);
+      setRolling(false);
+    }, 500); // 500ms animation
   };
 
   const toggleHold = idx => {
@@ -182,6 +190,9 @@ const SimpleGame = () => {
     if (yahtzeeBonusPoints) {
       setTimeout(() => alert("Yahtzee Bonus! +100 points"), 300);
     }
+    if (scores.filter(s => s !== null).length === scoreCategories.length - 1) {
+      setTimeout(() => setShowSummary(true), 700);
+    }
   };
 
   const handleRefresh = () => {
@@ -191,6 +202,7 @@ const SimpleGame = () => {
     setRolls(0);
     setSelectedCat(null);
     setYahtzeeBonuses(0);
+    setShowSummary(false);
   };
 
   const upperTotal = upperSectionTotal(scores);
@@ -242,6 +254,7 @@ const SimpleGame = () => {
         {dice.map((d, i) => (
           <button
             key={i}
+            ref={el => diceRefs.current[i] = el}
             className={`text-5xl w-16 h-16 rounded-xl border-4 shadow transition-all duration-200 flex items-center justify-center
               ${held[i]
                 ? "border-purple-500 bg-purple-100 dark:bg-purple-900 scale-110"
@@ -249,6 +262,7 @@ const SimpleGame = () => {
                   ? "border-green-400 bg-green-50 dark:bg-green-900 scale-105 animate-pulse"
                   : "border-gray-300 bg-white dark:bg-gray-800 hover:border-purple-300"}
               ${canRoll ? "cursor-pointer" : "opacity-60"}
+              ${rolling ? "animate-bounce" : ""}
             `}
             style={{
               color: diceColors[d],
@@ -256,7 +270,7 @@ const SimpleGame = () => {
               transition: "transform 0.15s, box-shadow 0.15s"
             }}
             onClick={() => toggleHold(i)}
-            disabled={!canRoll}
+            disabled={!canRoll || rolling}
             aria-label={held[i] ? "Unhold die" : "Hold die"}
           >
             {diceUnicode[d]}
@@ -365,6 +379,44 @@ const SimpleGame = () => {
           </button>
         </div>
       )}
+      {/* Game Over Summary Modal */}
+      <AnimatePresence>
+        {showSummary && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 max-w-md w-full relative"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+            >
+              <button
+                className="absolute top-3 right-4 text-2xl text-gray-400 hover:text-purple-500"
+                onClick={() => setShowSummary(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <div className="text-2xl font-bold text-purple-700 mb-2">Game Over!</div>
+              <div className="mb-2 text-lg">Final Score: <span className="font-bold">{totalScore}</span></div>
+              <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                {upperBonus > 0 && <div>Upper Section Bonus: +35</div>}
+                {yahtzeeBonuses > 0 && <div>Yahtzee Bonuses: +{yahtzeeBonuses}</div>}
+              </div>
+              <button
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
+                onClick={handleRefresh}
+              >
+                Play Again
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
