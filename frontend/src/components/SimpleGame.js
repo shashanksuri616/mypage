@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Utility to roll dice
@@ -142,6 +142,20 @@ function getBestCategory(dice, scores) {
   return best.idx;
 }
 
+const LEADERBOARD_KEY = "yahtzee_leaderboard";
+
+function getLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveLeaderboard(lb) {
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(lb));
+}
+
 const SimpleGame = () => {
   const [dice, setDice] = useState(rollDice());
   const [held, setHeld] = useState([false, false, false, false, false]);
@@ -152,6 +166,8 @@ const SimpleGame = () => {
   const [yahtzeeBonuses, setYahtzeeBonuses] = useState(0);
   const [showSummary, setShowSummary] = useState(false);
   const [rolling, setRolling] = useState(false);
+  const [leaderboard, setLeaderboard] = useState(getLeaderboard());
+  const [playerName, setPlayerName] = useState("");
   const diceRefs = useRef([null, null, null, null, null]);
 
   const canRoll = rolls < 3 && scores.some(s => s === null);
@@ -237,6 +253,26 @@ const SimpleGame = () => {
     return [false, false, false, false, false];
   }
   const suggestedHolds = getSuggestedHolds();
+
+  // Add score to leaderboard at game over
+  useEffect(() => {
+    if (gameOver && totalScore > 0) {
+      setTimeout(() => setShowSummary(true), 700);
+    }
+    // eslint-disable-next-line
+  }, [gameOver]);
+
+  const handleAddToLeaderboard = () => {
+    const name = playerName.trim() || "Anonymous";
+    const newEntry = { name, score: totalScore, date: new Date().toISOString() };
+    const updated = [...leaderboard, newEntry]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5); // Top 5
+    setLeaderboard(updated);
+    saveLeaderboard(updated);
+    setPlayerName("");
+    setShowSummary(false);
+  };
 
   return (
     <div className="flex flex-col items-center w-full h-full">
@@ -379,6 +415,20 @@ const SimpleGame = () => {
           </button>
         </div>
       )}
+      {/* Leaderboard */}
+      <div className="w-full max-w-xs mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
+        <div className="font-bold text-purple-700 mb-1 text-center">🏆 Leaderboard</div>
+        <ol className="list-decimal pl-5 space-y-1">
+          {leaderboard.length === 0 && <li className="text-gray-400">No scores yet</li>}
+          {leaderboard.map((entry, i) => (
+            <li key={i}>
+              <span className="font-semibold">{entry.name}</span>
+              <span className="mx-2 text-purple-700">{entry.score}</span>
+              <span className="text-gray-400 text-[10px]">{new Date(entry.date).toLocaleDateString()}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
       {/* Game Over Summary Modal */}
       <AnimatePresence>
         {showSummary && (
@@ -406,6 +456,21 @@ const SimpleGame = () => {
               <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
                 {upperBonus > 0 && <div>Upper Section Bonus: +35</div>}
                 {yahtzeeBonuses > 0 && <div>Yahtzee Bonuses: +{yahtzeeBonuses}</div>}
+              </div>
+              <div className="mb-4">
+                <input
+                  className="px-2 py-1 rounded border border-gray-300 dark:bg-gray-800 dark:text-gray-100 mr-2"
+                  placeholder="Your name"
+                  value={playerName}
+                  maxLength={12}
+                  onChange={e => setPlayerName(e.target.value)}
+                />
+                <button
+                  className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded"
+                  onClick={handleAddToLeaderboard}
+                >
+                  Save Score
+                </button>
               </div>
               <button
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
