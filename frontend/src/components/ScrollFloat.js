@@ -84,9 +84,15 @@ const ScrollFloat = () => {
     }
   }
 
+  // Add a progress indicator bar beside the path
+  const barHeight = 380;
+  const barY = 30;
+  const barX = 65;
+  const barProgress = barHeight * progress;
+
   return (
     <svg
-      width="80"
+      width="90"
       height="420"
       style={{
         position: "fixed",
@@ -110,6 +116,26 @@ const ScrollFloat = () => {
           <stop offset="100%" stopColor="#fbbf24" />
         </radialGradient>
       </defs>
+      {/* Progress bar background */}
+      <rect
+        x={barX}
+        y={barY}
+        width="7"
+        height={barHeight}
+        rx="4"
+        fill="#ede9fe"
+        opacity="0.45"
+      />
+      {/* Progress bar foreground */}
+      <rect
+        x={barX}
+        y={barY + barHeight - barProgress}
+        width="7"
+        height={barProgress}
+        rx="4"
+        fill="url(#scrollPathGrad)"
+        opacity="0.85"
+      />
       <path
         ref={pathRef}
         d="M40,20 L40,400"
