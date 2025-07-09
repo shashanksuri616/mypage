@@ -275,7 +275,7 @@ const SimpleGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-full">
+    <div className="flex flex-col items-center w-full h-full px-2 sm:px-0">
       <div className="flex items-center justify-between w-full mb-2">
         <h3 className="text-2xl font-bold mb-2 text-purple-700 dark:text-purple-300 flex-1 text-center">🎲 Yahtzee Mini</h3>
         <button
@@ -286,12 +286,14 @@ const SimpleGame = () => {
           ⟳ Restart
         </button>
       </div>
-      <div className="flex gap-3 mb-4">
+      <div className="flex gap-2 sm:gap-3 mb-4 flex-wrap justify-center">
         {dice.map((d, i) => (
           <button
             key={i}
-            ref={el => diceRefs.current[i] = el}
-            className={`text-5xl w-16 h-16 rounded-xl border-4 shadow transition-all duration-200 flex items-center justify-center
+            className={`
+              text-3xl sm:text-5xl w-12 h-12 sm:w-16 sm:h-16
+              rounded-xl border-4 shadow flex items-center justify-center
+              transition-all duration-200
               ${held[i]
                 ? "border-purple-500 bg-purple-100 dark:bg-purple-900 scale-110"
                 : suggestedHolds[i]
@@ -303,7 +305,6 @@ const SimpleGame = () => {
             style={{
               color: diceColors[d],
               boxShadow: held[i] ? "0 0 0 4px #c4b5fd44" : undefined,
-              transition: "transform 0.15s, box-shadow 0.15s"
             }}
             onClick={() => toggleHold(i)}
             disabled={!canRoll || rolling}
@@ -351,7 +352,7 @@ const SimpleGame = () => {
           </div>
         </div>
       )}
-      <div className="w-full max-w-xs bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2">
+      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2 overflow-x-auto">
         <table className="w-full text-sm">
           <tbody>
             {scoreCategories.map((cat, i) => (
@@ -416,7 +417,7 @@ const SimpleGame = () => {
         </div>
       )}
       {/* Leaderboard */}
-      <div className="w-full max-w-xs mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
+      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
         <div className="font-bold text-purple-700 mb-1 text-center">🏆 Leaderboard</div>
         <ol className="list-decimal pl-5 space-y-1">
           {leaderboard.length === 0 && <li className="text-gray-400">No scores yet</li>}

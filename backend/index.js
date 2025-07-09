@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Serve the resume PDF statically from /public
 app.get('/resume', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'Anti_CV.pdf'));
+  res.sendFile(path.join(__dirname, 'public', 'Resume.pdf'));
 });
 
 // Or, to serve all static files in /public (recommended for future assets)
