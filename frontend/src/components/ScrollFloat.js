@@ -92,17 +92,19 @@ const ScrollFloat = () => {
 
   return (
     <svg
-      width="90"
-      height="420"
+      width="70"
+      height="320"
       style={{
         position: "fixed",
-        top: "12vh",
-        left: "2vw",
+        top: "8vh",
+        left: "1vw",
         zIndex: 5,
         pointerEvents: "none",
         opacity: 0.97,
+        maxWidth: "20vw",
+        maxHeight: "40vh",
       }}
-      className="lg:block"
+      className="hidden xs:block"
     >
       {/* Animated gradient path */}
       <defs>
