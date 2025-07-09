@@ -29,8 +29,14 @@ const GameSideTab = () => {
             style={{ background: "rgba(0,0,0,0.25)" }}
           >
             <motion.div
-              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 border border-purple-300 flex flex-col items-center"
-              style={{ width: 900, height: 750, maxWidth: "98vw", maxHeight: "98vh" }}
+              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-4 sm:p-8 border border-purple-300 flex flex-col items-center"
+              style={{
+                width: "98vw",
+                maxWidth: 480,
+                height: "98vh",
+                maxHeight: 700,
+                margin: "0 auto",
+              }}
               initial={{ scale: 0.92, y: 40 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.92, y: 40 }}
