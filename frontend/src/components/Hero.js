@@ -48,11 +48,12 @@ const Hero = () => {
       id="hero"
       ref={ref}
       className="
-        min-h-screen h-screen flex flex-col justify-center items-center
+        min-h-[90vh] h-auto flex flex-col justify-center items-center
         bg-gradient-to-br from-[#3b0764] via-[#9333ea] to-[#f59e42]
         dark:bg-gradient-to-br dark:from-[#022c22] dark:via-[#312e81] dark:to-[#000]
         text-white text-center relative overflow-hidden transition-colors duration-500
-        px-2 sm:px-0
+        px-2 sm:px-4 md:px-8
+        py-10 sm:py-16
       "
       initial="hidden"
       animate={controls}
@@ -65,12 +66,12 @@ const Hero = () => {
 
       {/* Floating Animated Elements */}
       <motion.div
-        className="absolute top-4 left-2 w-14 h-14 sm:top-10 sm:left-10 sm:w-20 sm:h-20 bg-white/30 dark:bg-white/10 rounded-full blur-xl pointer-events-none"
+        className="absolute top-4 left-2 w-10 h-10 xs:w-14 xs:h-14 sm:top-10 sm:left-10 sm:w-20 sm:h-20 bg-white/30 dark:bg-white/10 rounded-full blur-xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
       />
       <motion.div
-        className="absolute bottom-10 right-2 w-20 h-20 sm:bottom-20 sm:right-20 sm:w-32 sm:h-32 bg-white/20 dark:bg-white/5 rounded-full blur-2xl pointer-events-none"
+        className="absolute bottom-6 right-2 w-14 h-14 xs:w-20 xs:h-20 sm:bottom-20 sm:right-20 sm:w-32 sm:h-32 bg-white/20 dark:bg-white/5 rounded-full blur-2xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
         style={{ animationDelay: "1s" }}
@@ -78,7 +79,7 @@ const Hero = () => {
 
       {/* Main Content */}
       <motion.h1
-        className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tighter drop-shadow-[0_2px_16px_rgba(0,0,0,0.35)] mb-4"
+        className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter drop-shadow-[0_2px_16px_rgba(0,0,0,0.35)] mb-3 sm:mb-4"
         variants={textVariants}
         custom={1}
         style={{
@@ -88,7 +89,7 @@ const Hero = () => {
         Hi, I'm <span className="text-[#fbbf24] dark:text-[#a3e635]">Suri Shashank</span>
       </motion.h1>
       <motion.p
-        className="mt-2 text-base xs:text-lg sm:text-xl md:text-2xl tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] mb-8"
+        className="mt-2 text-sm xs:text-base sm:text-lg md:text-xl tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] mb-6 sm:mb-8"
         variants={textVariants}
         custom={2}
       >
@@ -97,7 +98,7 @@ const Hero = () => {
         </span>
       </motion.p>
       <motion.div
-        className="flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center items-center w-full max-w-xs sm:max-w-md mx-auto"
+        className="flex flex-col xs:flex-row gap-3 xs:gap-6 justify-center items-center w-full max-w-xs sm:max-w-md mx-auto"
         variants={textVariants}
         custom={3}
       >
@@ -135,7 +136,7 @@ const Hero = () => {
 
       {/* Fun Interactive Tagline */}
       <motion.p
-        className="mt-8 xs:mt-12 text-sm xs:text-lg italic text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.18)] px-2"
+        className="mt-6 xs:mt-10 text-xs xs:text-sm sm:text-lg italic text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.18)] px-2"
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ delay: 1.2, duration: 1 }}
