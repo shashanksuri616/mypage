@@ -31,9 +31,9 @@ const scoreCategories = [
   {
     name: "Three of a Kind",
     calc: dice => {
-      for (let i = 1; i <= 6; i++) {
-        if (dice.filter(d => d === i).length >= 3) return dice.reduce((a, b) => a + b, 0);
-      }
+      const counts = Array(7).fill(0);
+      dice.forEach(d => counts[d]++);
+      if (counts.some(c => c >= 3)) return dice.reduce((a, b) => a + b, 0);
       return 0;
     },
     help: "At least three dice the same. Score: sum of all dice."
@@ -41,9 +41,9 @@ const scoreCategories = [
   {
     name: "Four of a Kind",
     calc: dice => {
-      for (let i = 1; i <= 6; i++) {
-        if (dice.filter(d => d === i).length >= 4) return dice.reduce((a, b) => a + b, 0);
-      }
+      const counts = Array(7).fill(0);
+      dice.forEach(d => counts[d]++);
+      if (counts.some(c => c >= 4)) return dice.reduce((a, b) => a + b, 0);
       return 0;
     },
     help: "At least four dice the same. Score: sum of all dice."
@@ -51,8 +51,14 @@ const scoreCategories = [
   {
     name: "Full House",
     calc: dice => {
-      const counts = [1,2,3,4,5,6].map(i => dice.filter(d => d === i).length);
-      return counts.includes(3) && counts.includes(2) ? 25 : 0;
+      const counts = Array(7).fill(0);
+      dice.forEach(d => counts[d]++);
+      const hasThree = counts.some(c => c === 3);
+      const hasTwo = counts.some(c => c === 2);
+      if (hasThree && hasTwo) return 25;
+      // Yahtzee counts as full house only if not scored in Yahtzee
+      if (counts.some(c => c === 5)) return 25;
+      return 0;
     },
     help: "Three of one number and two of another. Score: 25 points."
   },
@@ -60,6 +66,7 @@ const scoreCategories = [
     name: "Small Straight",
     calc: dice => {
       const uniq = Array.from(new Set(dice)).sort();
+      // Check for 1-2-3-4, 2-3-4-5, 3-4-5-6
       const straights = [
         [1,2,3,4],
         [2,3,4,5],
@@ -68,6 +75,11 @@ const scoreCategories = [
       for (let s of straights) {
         if (s.every(n => uniq.includes(n))) return 30;
       }
+      // Also allow 1-2-3-4-5 or 2-3-4-5-6 (large straight) to count as small straight
+      if (
+        [1,2,3,4,5].every(n => uniq.includes(n)) ||
+        [2,3,4,5,6].every(n => uniq.includes(n))
+      ) return 30;
       return 0;
     },
     help: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
@@ -75,8 +87,12 @@ const scoreCategories = [
   {
     name: "Large Straight",
     calc: dice => {
-      const uniq = Array.from(new Set(dice)).sort().join("");
-      return uniq === "12345" || uniq === "23456" ? 40 : 0;
+      const uniq = Array.from(new Set(dice)).sort();
+      if (uniq.length === 5 && (
+        uniq.join("") === "12345" ||
+        uniq.join("") === "23456"
+      )) return 40;
+      return 0;
     },
     help: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
   },
