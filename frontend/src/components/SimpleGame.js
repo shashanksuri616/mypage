@@ -13,7 +13,6 @@ function upperSectionTotal(scores) {
 
 // Helper for Yahtzee bonus (multiple Yahtzees)
 function yahtzeeBonus(dice, scores) {
-  // If Yahtzee already scored with 50, and another Yahtzee is rolled, award 100 bonus
   const yahtzeeIdx = 12;
   if (scores[yahtzeeIdx] === 50 && dice.every(d => d === dice[0])) {
     return 100;
@@ -21,6 +20,7 @@ function yahtzeeBonus(dice, scores) {
   return 0;
 }
 
+// Improved scoring mechanics
 const scoreCategories = [
   { name: "Ones", calc: dice => dice.filter(d => d === 1).length * 1, help: "Sum of all 1s" },
   { name: "Twos", calc: dice => dice.filter(d => d === 2).length * 2, help: "Sum of all 2s" },
@@ -55,8 +55,8 @@ const scoreCategories = [
       dice.forEach(d => counts[d]++);
       const hasThree = counts.some(c => c === 3);
       const hasTwo = counts.some(c => c === 2);
-      if (hasThree && hasTwo) return 25;
       // Yahtzee counts as full house only if not scored in Yahtzee
+      if (hasThree && hasTwo) return 25;
       if (counts.some(c => c === 5)) return 25;
       return 0;
     },
@@ -65,21 +65,13 @@ const scoreCategories = [
   {
     name: "Small Straight",
     calc: dice => {
-      const uniq = Array.from(new Set(dice)).sort();
-      // Check for 1-2-3-4, 2-3-4-5, 3-4-5-6
-      const straights = [
-        [1,2,3,4],
-        [2,3,4,5],
-        [3,4,5,6]
-      ];
-      for (let s of straights) {
-        if (s.every(n => uniq.includes(n))) return 30;
+      const uniq = Array.from(new Set(dice)).sort((a, b) => a - b);
+      // Check for any four sequential numbers
+      for (let start = 1; start <= 3; start++) {
+        if ([start, start + 1, start + 2, start + 3].every(n => uniq.includes(n))) return 30;
       }
-      // Also allow 1-2-3-4-5 or 2-3-4-5-6 (large straight) to count as small straight
-      if (
-        [1,2,3,4,5].every(n => uniq.includes(n)) ||
-        [2,3,4,5,6].every(n => uniq.includes(n))
-      ) return 30;
+      // Large straight also counts as small straight
+      if ([1,2,3,4,5].every(n => uniq.includes(n)) || [2,3,4,5,6].every(n => uniq.includes(n))) return 30;
       return 0;
     },
     help: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
@@ -87,11 +79,8 @@ const scoreCategories = [
   {
     name: "Large Straight",
     calc: dice => {
-      const uniq = Array.from(new Set(dice)).sort();
-      if (uniq.length === 5 && (
-        uniq.join("") === "12345" ||
-        uniq.join("") === "23456"
-      )) return 40;
+      const uniq = Array.from(new Set(dice)).sort((a, b) => a - b);
+      if (uniq.length === 5 && (uniq.join("") === "12345" || uniq.join("") === "23456")) return 40;
       return 0;
     },
     help: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
@@ -147,7 +136,6 @@ const yahtzeeRules = [
 ];
 
 function getBestCategory(dice, scores) {
-  // Suggest the best available scoring option for the current dice
   let best = { idx: null, score: -1 };
   scoreCategories.forEach((cat, i) => {
     if (scores[i] === null) {
@@ -195,7 +183,7 @@ const SimpleGame = () => {
       setDice(dice.map((d, i) => held[i] ? d : Math.ceil(Math.random() * 6)));
       setRolls(rolls + 1);
       setRolling(false);
-    }, 500); // 500ms animation
+    }, 500);
   };
 
   const toggleHold = idx => {
@@ -207,7 +195,6 @@ const SimpleGame = () => {
     if (scores[idx] !== null) return;
     let newScores = [...scores];
     let yahtzeeBonusPoints = 0;
-    // Yahtzee bonus: if Yahtzee already scored and another Yahtzee is rolled, +100
     if (idx !== 12 && scores[12] === 50 && dice.every(d => d === dice[0])) {
       yahtzeeBonusPoints = 100;
       setYahtzeeBonuses(b => b + 100);
@@ -242,27 +229,22 @@ const SimpleGame = () => {
   const totalScore = scores.reduce((a, b) => a + (b || 0), 0) + upperBonus + yahtzeeBonuses;
   const gameOver = scores.every(s => s !== null);
 
-  // Suggest best scoring category
   const bestCat = getBestCategory(dice, scores);
 
-  // Suggest which dice to hold for best category (simple heuristic)
   function getSuggestedHolds() {
     if (rolls === 0) return [];
     if (bestCat == null) return [];
     const cat = scoreCategories[bestCat];
     if (["Ones","Twos","Threes","Fours","Fives","Sixes"].includes(cat.name)) {
-      // Hold dice matching the number
       return dice.map(d => d === parseInt(cat.name[0]) ? true : false);
     }
     if (cat.name === "Yahtzee" || cat.name === "Three of a Kind" || cat.name === "Four of a Kind" || cat.name === "Full House") {
-      // Hold the most common value
       let counts = [0,0,0,0,0,0,0];
       dice.forEach(d => counts[d]++);
       let maxVal = counts.indexOf(Math.max(...counts));
       return dice.map(d => d === maxVal);
     }
     if (cat.name === "Small Straight" || cat.name === "Large Straight") {
-      // Hold unique dice in a straight
       let uniq = Array.from(new Set(dice));
       return dice.map(d => uniq.includes(d));
     }
@@ -270,12 +252,10 @@ const SimpleGame = () => {
   }
   const suggestedHolds = getSuggestedHolds();
 
-  // Add score to leaderboard at game over
   useEffect(() => {
     if (gameOver && totalScore > 0) {
       setTimeout(() => setShowSummary(true), 700);
     }
-    // eslint-disable-next-line
   }, [gameOver]);
 
   const handleAddToLeaderboard = () => {
@@ -283,7 +263,7 @@ const SimpleGame = () => {
     const newEntry = { name, score: totalScore, date: new Date().toISOString() };
     const updated = [...leaderboard, newEntry]
       .sort((a, b) => b.score - a.score)
-      .slice(0, 5); // Top 5
+      .slice(0, 5);
     setLeaderboard(updated);
     saveLeaderboard(updated);
     setPlayerName("");
@@ -432,7 +412,6 @@ const SimpleGame = () => {
           </button>
         </div>
       )}
-      {/* Leaderboard */}
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
         <div className="font-bold text-purple-700 mb-1 text-center">🏆 Leaderboard</div>
         <ol className="list-decimal pl-5 space-y-1">
@@ -446,7 +425,6 @@ const SimpleGame = () => {
           ))}
         </ol>
       </div>
-      {/* Game Over Summary Modal */}
       <AnimatePresence>
         {showSummary && (
           <motion.div
