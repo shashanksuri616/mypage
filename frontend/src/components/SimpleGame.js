@@ -349,30 +349,30 @@ const SimpleGame = () => {
         </div>
       )}
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2 overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-xs sm:text-sm">
           <tbody>
             {scoreCategories.map((cat, i) => (
               <tr key={cat.name}>
-                <td className="py-1 flex items-center gap-2">
+                <td className="py-1 flex items-center gap-2 whitespace-nowrap">
                   {cat.name}
                   <span
                     className="text-gray-400 cursor-pointer"
                     title={cat.help}
                   >&#9432;</span>
-                  {bestCat === i && canRoll === false && scores[i] === null && (
+                  {bestCat === i && !canRoll && scores[i] === null && (
                     <span className="ml-1 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs animate-pulse">
                       Best
                     </span>
                   )}
                 </td>
-                <td className="text-right">
+                <td className="text-right whitespace-nowrap">
                   {scores[i] !== null ? (
                     <span className="font-bold text-purple-600">{scores[i]}</span>
                   ) : (
                     <button
                       className={`px-2 py-0.5 rounded transition
                         ${selectedCat === i ? "bg-purple-200" : "hover:bg-purple-100 dark:hover:bg-purple-900"}
-                        ${bestCat === i && canRoll === false ? "ring-2 ring-green-400" : ""}
+                        ${bestCat === i && !canRoll ? "ring-2 ring-green-400" : ""}
                       `}
                       onClick={() => handleScore(i)}
                       disabled={rolls === 0 || !canRoll}
@@ -385,7 +385,7 @@ const SimpleGame = () => {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-between text-xs mt-2">
+        <div className="flex flex-col sm:flex-row justify-between text-xs mt-2 gap-2">
           <span>
             Upper Total: <span className="font-bold">{upperTotal}</span>
             {upperBonus > 0 && (
