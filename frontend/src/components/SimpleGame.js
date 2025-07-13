@@ -348,7 +348,12 @@ const SimpleGame = () => {
           </div>
         </div>
       )}
-      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2 overflow-x-auto">
+      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2 overflow-x-auto"
+        style={{
+          WebkitOverflowScrolling: "touch", // Smooth scrolling for Android/iOS
+          touchAction: "pan-y", // Prevent unwanted horizontal scroll on mobile
+        }}
+      >
         <table className="w-full text-xs sm:text-sm">
           <tbody>
             {scoreCategories.map((cat, i) => (
@@ -358,6 +363,10 @@ const SimpleGame = () => {
                   <span
                     className="text-gray-400 cursor-pointer"
                     title={cat.help}
+                    tabIndex={0} // Make info icon focusable for accessibility
+                    role="button"
+                    aria-label={`Help: ${cat.help}`}
+                    onTouchStart={e => e.target.click()} // Ensure tap works on Android
                   >&#9432;</span>
                   {bestCat === i && !canRoll && scores[i] === null && (
                     <span className="ml-1 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs animate-pulse">
@@ -376,6 +385,9 @@ const SimpleGame = () => {
                       `}
                       onClick={() => handleScore(i)}
                       disabled={rolls === 0 || !canRoll}
+                      style={{
+                        touchAction: "manipulation", // Improves tap responsiveness
+                      }}
                     >
                       Score ({cat.calc(dice)})
                     </button>
