@@ -29,13 +29,16 @@ const GameSideTab = () => {
             style={{ background: "rgba(0,0,0,0.25)" }}
           >
             <motion.div
-              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-4 sm:p-8 border border-purple-300 flex flex-col items-center"
+              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-2 xs:p-4 sm:p-8 border border-purple-300 flex flex-col items-center overflow-y-auto"
               style={{
-                width: "98vw",
-                maxWidth: 480,
-                height: "98vh",
-                maxHeight: 700,
+                width: "100vw",
+                maxWidth: "98vw",
+                height: "100vh",
+                maxHeight: "98vh",
                 margin: "0 auto",
+                boxSizing: "border-box",
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch", // Smooth scroll for iOS/Android
               }}
               initial={{ scale: 0.92, y: 40 }}
               animate={{ scale: 1, y: 0 }}
@@ -45,6 +48,7 @@ const GameSideTab = () => {
                 className="absolute top-3 right-4 text-2xl text-gray-400 hover:text-purple-500"
                 onClick={() => setOpen(false)}
                 aria-label="Close Game"
+                style={{ zIndex: 10, touchAction: "manipulation" }}
               >
                 &times;
               </button>
