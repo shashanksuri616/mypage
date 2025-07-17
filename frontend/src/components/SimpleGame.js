@@ -1,26 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Utility to roll dice
-function rollDice(num = 5) {
-  return Array.from({ length: num }, () => Math.ceil(Math.random() * 6));
-}
+// --- SIMPLIFIED YAHTZEE SCORING SYSTEM ---
+// Only keep: Ones, Twos, Threes, Fours, Fives, Sixes, Three of a Kind, Four of a Kind, Full House, Small Straight, Large Straight, Yahtzee, Chance
 
-// Helper for upper section bonus
-function upperSectionTotal(scores) {
-  return scores.slice(0, 6).reduce((a, b) => a + (b || 0), 0);
-}
-
-// Helper for Yahtzee bonus (multiple Yahtzees)
-function yahtzeeBonus(dice, scores) {
-  const yahtzeeIdx = 12;
-  if (scores[yahtzeeIdx] === 50 && dice.every(d => d === dice[0])) {
-    return 100;
-  }
-  return 0;
-}
-
-// Improved scoring mechanics
 const scoreCategories = [
   { name: "Ones", calc: dice => dice.filter(d => d === 1).length * 1, help: "Sum of all 1s" },
   { name: "Twos", calc: dice => dice.filter(d => d === 2).length * 2, help: "Sum of all 2s" },
@@ -31,9 +14,9 @@ const scoreCategories = [
   {
     name: "Three of a Kind",
     calc: dice => {
-      const counts = Array(7).fill(0);
-      dice.forEach(d => counts[d]++);
-      if (counts.some(c => c >= 3)) return dice.reduce((a, b) => a + b, 0);
+      for (let i = 1; i <= 6; i++) {
+        if (dice.filter(d => d === i).length >= 3) return dice.reduce((a, b) => a + b, 0);
+      }
       return 0;
     },
     help: "At least three dice the same. Score: sum of all dice."
@@ -41,9 +24,9 @@ const scoreCategories = [
   {
     name: "Four of a Kind",
     calc: dice => {
-      const counts = Array(7).fill(0);
-      dice.forEach(d => counts[d]++);
-      if (counts.some(c => c >= 4)) return dice.reduce((a, b) => a + b, 0);
+      for (let i = 1; i <= 6; i++) {
+        if (dice.filter(d => d === i).length >= 4) return dice.reduce((a, b) => a + b, 0);
+      }
       return 0;
     },
     help: "At least four dice the same. Score: sum of all dice."
@@ -53,42 +36,38 @@ const scoreCategories = [
     calc: dice => {
       const counts = Array(7).fill(0);
       dice.forEach(d => counts[d]++);
-      const hasThree = counts.some(c => c === 3);
-      const hasTwo = counts.some(c => c === 2);
-      // Yahtzee counts as full house only if not scored in Yahtzee
-      if (hasThree && hasTwo) return 25;
-      if (counts.some(c => c === 5)) return 25;
-      return 0;
+      return (counts.includes(3) && counts.includes(2)) ? 25 : 0;
     },
     help: "Three of one number and two of another. Score: 25 points."
   },
   {
     name: "Small Straight",
     calc: dice => {
-      const uniq = Array.from(new Set(dice)).sort((a, b) => a - b);
-      // Check for any four sequential numbers
-      for (let start = 1; start <= 3; start++) {
-        if ([start, start + 1, start + 2, start + 3].every(n => uniq.includes(n))) return 30;
+      const uniq = Array.from(new Set(dice)).sort();
+      const straights = [
+        [1,2,3,4],
+        [2,3,4,5],
+        [3,4,5,6]
+      ];
+      for (let s of straights) {
+        if (s.every(n => uniq.includes(n))) return 30;
       }
-      // Large straight also counts as small straight
-      if ([1,2,3,4,5].every(n => uniq.includes(n)) || [2,3,4,5,6].every(n => uniq.includes(n))) return 30;
       return 0;
     },
-    help: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
+    help: "Any four sequential dice. Score: 30 points."
   },
   {
     name: "Large Straight",
     calc: dice => {
-      const uniq = Array.from(new Set(dice)).sort((a, b) => a - b);
-      if (uniq.length === 5 && (uniq.join("") === "12345" || uniq.join("") === "23456")) return 40;
-      return 0;
+      const uniq = Array.from(new Set(dice)).sort().join("");
+      return (uniq === "12345" || uniq === "23456") ? 40 : 0;
     },
     help: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
   },
   {
     name: "Yahtzee",
     calc: dice => (dice.every(d => d === dice[0]) ? 50 : 0),
-    help: "All five dice the same. Score: 50 points. Additional Yahtzees: +100 bonus each."
+    help: "All five dice the same. Score: 50 points."
   },
   {
     name: "Chance",
@@ -97,56 +76,24 @@ const scoreCategories = [
   }
 ];
 
+// --- END SIMPLIFIED SCORING ---
+
 const diceUnicode = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 const diceColors = ["", "#fbbf24", "#a78bfa", "#38bdf8", "#f472b6", "#34d399", "#f87171"];
 
 const yahtzeeRules = [
-  {
-    name: "Upper Section (Ones–Sixes)",
-    desc: "Score the sum of dice showing that number. If your total for these six categories is 63 or more, you earn a 35-point bonus."
-  },
-  {
-    name: "Three of a Kind",
-    desc: "At least three dice the same. Score: sum of all dice."
-  },
-  {
-    name: "Four of a Kind",
-    desc: "At least four dice the same. Score: sum of all dice."
-  },
-  {
-    name: "Full House",
-    desc: "Three of one number and two of another. Score: 25 points."
-  },
-  {
-    name: "Small Straight",
-    desc: "Four sequential dice (e.g., 2-3-4-5). Score: 30 points."
-  },
-  {
-    name: "Large Straight",
-    desc: "Five sequential dice (1-2-3-4-5 or 2-3-4-5-6). Score: 40 points."
-  },
-  {
-    name: "Yahtzee",
-    desc: "All five dice the same. Score: 50 points. Additional Yahtzees: +100 bonus each."
-  },
-  {
-    name: "Chance",
-    desc: "Any combination. Score: sum of all dice."
-  }
+  { name: "Ones–Sixes", desc: "Score the sum of dice showing that number." },
+  { name: "Three of a Kind", desc: "At least three dice the same. Score: sum of all dice." },
+  { name: "Four of a Kind", desc: "At least four dice the same. Score: sum of all dice." },
+  { name: "Full House", desc: "Three of one number and two of another. Score: 25 points." },
+  { name: "Small Straight", desc: "Any four sequential dice. Score: 30 points." },
+  { name: "Large Straight", desc: "Five sequential dice. Score: 40 points." },
+  { name: "Yahtzee", desc: "All five dice the same. Score: 50 points." },
+  { name: "Chance", desc: "Any combination. Score: sum of all dice." }
 ];
 
-function getBestCategory(dice, scores) {
-  let best = { idx: null, score: -1 };
-  scoreCategories.forEach((cat, i) => {
-    if (scores[i] === null) {
-      const val = cat.calc(dice);
-      if (val > best.score) best = { idx: i, score: val };
-    }
-  });
-  return best.idx;
-}
-
-const LEADERBOARD_KEY = "yahtzee_leaderboard";
+// Use localStorage for persistent scores
+const LEADERBOARD_KEY = "yahtzee_leaderboard_simple";
 
 function getLeaderboard() {
   try {
@@ -160,6 +107,10 @@ function saveLeaderboard(lb) {
   localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(lb));
 }
 
+function rollDice(num = 5) {
+  return Array.from({ length: num }, () => Math.ceil(Math.random() * 6));
+}
+
 const SimpleGame = () => {
   const [dice, setDice] = useState(rollDice());
   const [held, setHeld] = useState([false, false, false, false, false]);
@@ -167,73 +118,41 @@ const SimpleGame = () => {
   const [scores, setScores] = useState(Array(scoreCategories.length).fill(null));
   const [selectedCat, setSelectedCat] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
-  const [yahtzeeBonuses, setYahtzeeBonuses] = useState(0);
   const [showSummary, setShowSummary] = useState(false);
-  const [rolling, setRolling] = useState(false);
   const [leaderboard, setLeaderboard] = useState(getLeaderboard());
   const [playerName, setPlayerName] = useState("");
-  const diceRefs = useRef([null, null, null, null, null]);
+  const [lastSelected, setLastSelected] = useState(null);
 
+  // Only allow rolling if not all categories are filled and less than 3 rolls
   const canRoll = rolls < 3 && scores.some(s => s === null);
 
-  const handleRoll = () => {
-    if (!canRoll) return;
-    setRolling(true);
-    setTimeout(() => {
-      setDice(dice.map((d, i) => held[i] ? d : Math.ceil(Math.random() * 6)));
-      setRolls(rolls + 1);
-      setRolling(false);
-    }, 500);
-  };
+  // Remember last selected category for score summary
+  useEffect(() => {
+    if (selectedCat !== null) setLastSelected(selectedCat);
+  }, [selectedCat]);
 
-  const toggleHold = idx => {
-    if (!canRoll) return;
-    setHeld(held.map((h, i) => (i === idx ? !h : h)));
-  };
+  // Calculate total score using only filled categories
+  const totalScore = scores.reduce((a, b) => a + (b || 0), 0);
 
-  const handleScore = idx => {
-    if (scores[idx] !== null) return;
-    let newScores = [...scores];
-    let yahtzeeBonusPoints = 0;
-    if (idx !== 12 && scores[12] === 50 && dice.every(d => d === dice[0])) {
-      yahtzeeBonusPoints = 100;
-      setYahtzeeBonuses(b => b + 100);
-    }
-    newScores[idx] = scoreCategories[idx].calc(dice);
-    setScores(newScores);
-    setDice(rollDice());
-    setHeld([false, false, false, false, false]);
-    setRolls(1);
-    setSelectedCat(idx);
-    setTimeout(() => setSelectedCat(null), 600);
-    if (yahtzeeBonusPoints) {
-      setTimeout(() => alert("Yahtzee Bonus! +100 points"), 300);
-    }
-    if (scores.filter(s => s !== null).length === scoreCategories.length - 1) {
-      setTimeout(() => setShowSummary(true), 700);
-    }
-  };
-
-  const handleRefresh = () => {
-    setScores(Array(scoreCategories.length).fill(null));
-    setDice(rollDice());
-    setHeld([false, false, false, false, false]);
-    setRolls(0);
-    setSelectedCat(null);
-    setYahtzeeBonuses(0);
-    setShowSummary(false);
-  };
-
-  const upperTotal = upperSectionTotal(scores);
-  const upperBonus = upperTotal >= 63 ? 35 : 0;
-  const totalScore = scores.reduce((a, b) => a + (b || 0), 0) + upperBonus + yahtzeeBonuses;
+  // Game over if all categories are filled
   const gameOver = scores.every(s => s !== null);
 
-  const bestCat = getBestCategory(dice, scores);
+  // Suggest best category (highest score for current dice)
+  function getBestCategory() {
+    let best = { idx: null, score: -1 };
+    scoreCategories.forEach((cat, i) => {
+      if (scores[i] === null) {
+        const val = cat.calc(dice);
+        if (val > best.score) best = { idx: i, score: val };
+      }
+    });
+    return best.idx;
+  }
+  const bestCat = getBestCategory();
 
+  // Hold suggestion: highlight dice that help with bestCat
   function getSuggestedHolds() {
-    if (rolls === 0) return [];
-    if (bestCat == null) return [];
+    if (rolls === 0 || bestCat == null) return [false, false, false, false, false];
     const cat = scoreCategories[bestCat];
     if (["Ones","Twos","Threes","Fours","Fives","Sixes"].includes(cat.name)) {
       return dice.map(d => d === parseInt(cat.name[0]) ? true : false);
@@ -252,12 +171,45 @@ const SimpleGame = () => {
   }
   const suggestedHolds = getSuggestedHolds();
 
-  useEffect(() => {
-    if (gameOver && totalScore > 0) {
-      setTimeout(() => setShowSummary(true), 700);
-    }
-  }, [gameOver]);
+  // Roll dice
+  const handleRoll = () => {
+    if (!canRoll) return;
+    setDice(dice.map((d, i) => held[i] ? d : Math.ceil(Math.random() * 6)));
+    setRolls(rolls + 1);
+  };
 
+  // Hold/unhold dice
+  const toggleHold = idx => {
+    if (!canRoll) return;
+    setHeld(held.map((h, i) => (i === idx ? !h : h)));
+  };
+
+  // Score selection
+  const handleScore = idx => {
+    if (scores[idx] !== null) return;
+    const newScores = [...scores];
+    newScores[idx] = scoreCategories[idx].calc(dice);
+    setScores(newScores);
+    setDice(rollDice());
+    setHeld([false, false, false, false, false]);
+    setRolls(0);
+    setSelectedCat(idx);
+    setTimeout(() => setSelectedCat(null), 600);
+    if (newScores.every(s => s !== null)) setTimeout(() => setShowSummary(true), 700);
+  };
+
+  // Restart game
+  const handleRefresh = () => {
+    setScores(Array(scoreCategories.length).fill(null));
+    setDice(rollDice());
+    setHeld([false, false, false, false, false]);
+    setRolls(0);
+    setSelectedCat(null);
+    setShowSummary(false);
+    setLastSelected(null);
+  };
+
+  // Save to leaderboard
   const handleAddToLeaderboard = () => {
     const name = playerName.trim() || "Anonymous";
     const newEntry = { name, score: totalScore, date: new Date().toISOString() };
@@ -296,14 +248,13 @@ const SimpleGame = () => {
                   ? "border-green-400 bg-green-50 dark:bg-green-900 scale-105 animate-pulse"
                   : "border-gray-300 bg-white dark:bg-gray-800 hover:border-purple-300"}
               ${canRoll ? "cursor-pointer" : "opacity-60"}
-              ${rolling ? "animate-bounce" : ""}
             `}
             style={{
               color: diceColors[d],
               boxShadow: held[i] ? "0 0 0 4px #c4b5fd44" : undefined,
             }}
             onClick={() => toggleHold(i)}
-            disabled={!canRoll || rolling}
+            disabled={!canRoll}
             aria-label={held[i] ? "Unhold die" : "Hold die"}
           >
             {diceUnicode[d]}
@@ -338,20 +289,16 @@ const SimpleGame = () => {
             ))}
           </ul>
           <div className="mt-2 text-[11px] text-gray-500">
-            Hold dice by clicking them. You get up to 3 rolls per turn. After rolling, select a category to score. Each category can be used only once.
+            Hold dice by tapping them. You get up to 3 rolls per turn. After rolling, select a category to score. Each category can be used only once.
             <br />
             <span className="text-green-700">Green-highlighted dice</span> are suggested holds for the best scoring option.
-            <br />
-            <span className="text-blue-700">Upper section bonus:</span> Score 63+ in Ones–Sixes for +35 points.
-            <br />
-            <span className="text-yellow-700">Yahtzee bonus:</span> After your first Yahtzee, each extra Yahtzee is +100 points!
           </div>
         </div>
       )}
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/80 dark:bg-gray-800/80 rounded-xl shadow p-2 mb-2 overflow-x-auto"
         style={{
-          WebkitOverflowScrolling: "touch", // Smooth scrolling for Android/iOS
-          touchAction: "pan-y", // Prevent unwanted horizontal scroll on mobile
+          WebkitOverflowScrolling: "touch",
+          touchAction: "pan-y",
         }}
       >
         <table className="w-full text-xs sm:text-sm">
@@ -363,10 +310,10 @@ const SimpleGame = () => {
                   <span
                     className="text-gray-400 cursor-pointer"
                     title={cat.help}
-                    tabIndex={0} // Make info icon focusable for accessibility
+                    tabIndex={0}
                     role="button"
                     aria-label={`Help: ${cat.help}`}
-                    onTouchStart={e => e.target.click()} // Ensure tap works on Android
+                    onTouchStart={e => e.target.click()}
                   >&#9432;</span>
                   {bestCat === i && !canRoll && scores[i] === null && (
                     <span className="ml-1 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs animate-pulse">
@@ -386,7 +333,7 @@ const SimpleGame = () => {
                       onClick={() => handleScore(i)}
                       disabled={rolls === 0 || !canRoll}
                       style={{
-                        touchAction: "manipulation", // Improves tap responsiveness
+                        touchAction: "manipulation",
                       }}
                     >
                       Score ({cat.calc(dice)})
@@ -399,17 +346,8 @@ const SimpleGame = () => {
         </table>
         <div className="flex flex-col sm:flex-row justify-between text-xs mt-2 gap-2">
           <span>
-            Upper Total: <span className="font-bold">{upperTotal}</span>
-            {upperBonus > 0 && (
-              <span className="ml-2 text-green-700 font-bold">+35 Bonus!</span>
-            )}
+            Total: <span className="font-bold">{totalScore}</span>
           </span>
-          <span>
-            Yahtzee Bonus: <span className="font-bold">{yahtzeeBonuses}</span>
-          </span>
-        </div>
-        <div className="text-right font-bold text-lg mt-2">
-          Total: <span className="text-purple-700">{totalScore}</span>
         </div>
       </div>
       {gameOver && (
@@ -460,10 +398,6 @@ const SimpleGame = () => {
               </button>
               <div className="text-2xl font-bold text-purple-700 mb-2">Game Over!</div>
               <div className="mb-2 text-lg">Final Score: <span className="font-bold">{totalScore}</span></div>
-              <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-                {upperBonus > 0 && <div>Upper Section Bonus: +35</div>}
-                {yahtzeeBonuses > 0 && <div>Yahtzee Bonuses: +{yahtzeeBonuses}</div>}
-              </div>
               <div className="mb-4">
                 <input
                   className="px-2 py-1 rounded border border-gray-300 dark:bg-gray-800 dark:text-gray-100 mr-2"
