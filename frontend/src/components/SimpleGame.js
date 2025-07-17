@@ -222,6 +222,19 @@ const SimpleGame = () => {
     setShowSummary(false);
   };
 
+  // Prevent background scroll when summary popup is open
+  useEffect(() => {
+    if (showSummary) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showSummary]);
+
   return (
     <div className="flex flex-col items-center w-full h-full px-2 sm:px-0">
       <div className="flex items-center justify-between w-full mb-2">
@@ -382,6 +395,7 @@ const SimpleGame = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            style={{ touchAction: "none" }} // Prevent touch scroll on overlay
           >
             <motion.div
               className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 max-w-md w-full relative"
@@ -389,10 +403,12 @@ const SimpleGame = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
             >
+              {/* Cross button to exit popup */}
               <button
                 className="absolute top-3 right-4 text-2xl text-gray-400 hover:text-purple-500"
                 onClick={() => setShowSummary(false)}
                 aria-label="Close"
+                style={{ zIndex: 10, touchAction: "manipulation" }}
               >
                 &times;
               </button>
