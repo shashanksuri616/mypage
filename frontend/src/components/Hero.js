@@ -4,9 +4,12 @@ import { motion, useAnimation, useInView } from "framer-motion";
 
 const floatingVariants = {
   animate: {
-    y: [0, 20, 0],
+    y: [0, 24, -18, 0],
+    x: [0, 8, -8, 0],
+    scale: [1, 1.08, 0.95, 1],
+    rotate: [0, 8, -8, 0],
     transition: {
-      duration: 4,
+      duration: 6,
       repeat: Infinity,
       ease: "easeInOut",
     },
@@ -14,14 +17,18 @@ const floatingVariants = {
 };
 
 const textVariants = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { opacity: 0, y: 60, scale: 0.95 },
   visible: (i = 1) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
       delay: 0.2 * i,
       duration: 0.8,
       ease: "easeOut",
+      type: "spring",
+      stiffness: 120,
+      damping: 12,
     },
   }),
 };
@@ -58,8 +65,8 @@ const Hero = () => {
       initial="hidden"
       animate={controls}
       variants={{
-        hidden: { opacity: 0, y: 80 },
-        visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } },
+        hidden: { opacity: 0, y: 80, scale: 0.98 },
+        visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.2, ease: "easeOut" } },
       }}
     >
       {/* Animated Snake Background <SnakeBackground />*/}
@@ -74,7 +81,7 @@ const Hero = () => {
         className="absolute bottom-6 right-2 w-14 h-14 xs:w-20 xs:h-20 sm:bottom-20 sm:right-20 sm:w-32 sm:h-32 bg-white/20 dark:bg-white/5 rounded-full blur-2xl pointer-events-none"
         variants={floatingVariants}
         animate="animate"
-        style={{ animationDelay: "1s" }}
+        style={{ animationDelay: "1.5s" }}
       />
 
       {/* Main Content */}
@@ -85,13 +92,21 @@ const Hero = () => {
         style={{
           textShadow: "0 2px 16px rgba(0,0,0,0.35), 0 1px 0 #fff"
         }}
+        whileHover={{ scale: 1.04, rotate: -2 }}
+        whileTap={{ scale: 0.97, rotate: 2 }}
       >
-        Hi, I'm <span className="text-[#fbbf24] dark:text-[#a3e635]">Suri Shashank</span>
+        Hi, I'm <motion.span
+          className="text-[#fbbf24] dark:text-[#a3e635]"
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1.1 }}
+          transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.2, ease: "easeInOut" }}
+        >Suri Shashank</motion.span>
       </motion.h1>
       <motion.p
         className="mt-2 text-sm xs:text-base sm:text-lg md:text-xl tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] mb-6 sm:mb-8"
         variants={textVariants}
         custom={2}
+        whileHover={{ scale: 1.03 }}
       >
         <span className="bg-white/30 dark:bg-black/30 px-2 py-1 xs:px-3 xs:py-1 rounded-lg text-black dark:text-white shadow">
           Creative Developer, Problem Solver, & Anti-Resume Enthusiast
@@ -105,7 +120,7 @@ const Hero = () => {
         <motion.button
           className="w-full xs:w-auto border-2 border-white px-4 py-2 xs:px-8 xs:py-3 text-base xs:text-lg font-semibold rounded-lg transition-all duration-300 bg-white/20 dark:bg-white/10 text-white hover:text-[#3b0764] dark:hover:text-[#a3e635] hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#fbbf24] dark:focus:ring-[#a3e635]"
           whileHover={{
-            scale: 1.08,
+            scale: 1.12,
             backgroundColor: "#fff",
             color: "#3b0764",
             boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
@@ -120,7 +135,7 @@ const Hero = () => {
         <motion.button
           className="w-full xs:w-auto border-2 border-white px-4 py-2 xs:px-8 xs:py-3 text-base xs:text-lg font-semibold rounded-lg transition-all duration-300 bg-white/20 dark:bg-white/10 text-white hover:text-[#3b0764] dark:hover:text-[#a3e635] hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#fbbf24] dark:focus:ring-[#a3e635]"
           whileHover={{
-            scale: 1.08,
+            scale: 1.12,
             backgroundColor: "#fff",
             color: "#3b0764",
             boxShadow: "0 8px 32px 0 rgba(255,255,255,0.2)",
@@ -137,9 +152,10 @@ const Hero = () => {
       {/* Fun Interactive Tagline */}
       <motion.p
         className="mt-6 xs:mt-10 text-xs xs:text-sm sm:text-lg italic text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.18)] px-2"
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 1.2, duration: 1 }}
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{ delay: 1.2, duration: 1, type: "spring", stiffness: 80 }}
+        whileHover={{ scale: 1.04, color: "#fbbf24" }}
       >
         <span role="img" aria-label="sparkles">✨</span> Not your average portfolio. Not your average developer. <span role="img" aria-label="rocket">🚀</span>
       </motion.p>
