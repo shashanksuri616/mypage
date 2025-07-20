@@ -13,7 +13,7 @@ const ScrollFloat = () => {
   const [velocity, setVelocity] = useState(0);
   const lastProgress = useRef(0);
 
-  // Smooth scroll animation using requestAnimationFrame
+  // Improved scroll animation: uses spring for smoother progress
   useEffect(() => {
     let lastTime = performance.now();
     let animFrame;
@@ -27,8 +27,12 @@ const ScrollFloat = () => {
     };
 
     const animate = () => {
-      // Smoothly interpolate progress
-      currentProg += (targetProg - currentProg) * 0.18;
+      // Spring-like interpolation for smoother progress
+      const stiffness = 0.22;
+      const damping = 0.82;
+      const delta = targetProg - currentProg;
+      currentProg += delta * stiffness;
+      currentProg *= damping;
       setProgress(currentProg);
 
       // Velocity calculation
@@ -140,7 +144,7 @@ const ScrollFloat = () => {
       />
       <path
         ref={pathRef}
-        d="M40,20 L40,400"
+        d="M40,20 Q60,120 40,220 Q20,320 40,400"
         fill="none"
         stroke="url(#scrollPathGrad)"
         strokeWidth="5"
