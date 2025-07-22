@@ -1,10 +1,22 @@
 // GameSideTab.js
-import { useState } from "react";
+import { useState, useEffect } from "react"; // <-- Add useEffect import
 import { motion, AnimatePresence } from "framer-motion";
 import SimpleGame from "./SimpleGame";
 
 const GameSideTab = () => {
   const [open, setOpen] = useState(false);
+
+  // Prevent background scroll when game popup is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <>
@@ -26,19 +38,20 @@ const GameSideTab = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ background: "rgba(0,0,0,0.25)" }}
+            style={{ background: "rgba(0,0,0,0.25)", touchAction: "none" }}
           >
             <motion.div
-              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-2 xs:p-4 sm:p-8 border border-purple-300 flex flex-col items-center overflow-y-auto"
+              className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-purple-300 flex flex-col items-center overflow-y-auto"
               style={{
-                width: "100vw",
-                maxWidth: "98vw",
-                height: "100vh",
-                maxHeight: "98vh",
+                width: "96vw",
+                maxWidth: "420px",
+                height: "96vh",
+                maxHeight: "620px",
                 margin: "0 auto",
                 boxSizing: "border-box",
                 overscrollBehavior: "contain",
-                WebkitOverflowScrolling: "touch", // Smooth scroll for iOS/Android
+                WebkitOverflowScrolling: "touch",
+                padding: "1.5rem",
               }}
               initial={{ scale: 0.92, y: 40 }}
               animate={{ scale: 1, y: 0 }}
