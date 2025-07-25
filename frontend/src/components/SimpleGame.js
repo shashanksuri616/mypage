@@ -92,7 +92,6 @@ const yahtzeeRules = [
   { name: "Chance", desc: "Any combination. Score: sum of all dice." }
 ];
 
-// Use localStorage for persistent scores
 const LEADERBOARD_KEY = "yahtzee_leaderboard_simple";
 
 function getLeaderboard() {
@@ -395,7 +394,7 @@ const SimpleGame = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ touchAction: "none" }} // Prevent touch scroll on overlay
+            style={{ touchAction: "none" }}
           >
             <motion.div
               className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 max-w-md w-full relative"
@@ -403,7 +402,6 @@ const SimpleGame = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
             >
-              {/* Cross button to exit popup */}
               <button
                 className="absolute top-3 right-4 text-2xl text-gray-400 hover:text-purple-500"
                 onClick={() => setShowSummary(false)}
