@@ -296,23 +296,34 @@ const SimpleGame = () => {
 				))}
 			</div>
 			<div className="flex items-center gap-4 mb-4">
-				<button
-					className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition disabled:opacity-50 shadow"
-					onClick={handleRoll}
-					disabled={!canRoll}
-				>
-					{rolls === 0 ? "Start" : rolls < 3 ? `Roll (${3 - rolls} left)` : "No Rolls Left"}
-				</button>
-				<span className="text-gray-600 dark:text-gray-300 text-sm">
-					Rolls: <span className="font-bold">{rolls}</span> / 3
-				</span>
-				<button
-					className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-lg font-semibold text-xs hover:bg-purple-200 dark:hover:bg-purple-800 transition"
-					onClick={() => setShowHelp((h) => !h)}
-				>
-					{showHelp ? "Hide Help" : "Show Help"}
-				</button>
-			</div>
+                <button
+                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition disabled:opacity-50 shadow"
+                    onClick={handleRoll}
+                    disabled={!canRoll}
+                >
+                    {rolls === 0 ? "Start" : rolls < 3 ? `Roll (${3 - rolls} left)` : "No Rolls Left"}
+                </button>
+                <span className="text-gray-600 dark:text-gray-300 text-sm">
+                    Rolls: <span className="font-bold">{rolls}</span> / 3
+                </span>
+                <button
+                    className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-lg font-semibold text-xs hover:bg-purple-200 dark:hover:bg-purple-800 transition"
+                    onClick={() => setShowHelp((h) => !h)}
+                >
+                    {showHelp ? "Hide Help" : "Show Help"}
+                </button>
+                {showStreak && (
+                    <motion.span
+                        className="ml-2 px-3 py-1 bg-yellow-200 text-yellow-800 rounded-lg font-bold text-xs shadow animate-bounce"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1.1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    >
+                        +10 Streak Bonus!
+                    </motion.span>
+                )}
+            </div>
 			{showHelp && (
 				<div className="w-full max-w-xs mb-4 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200">
 					<ul className="list-disc pl-5 space-y-1">
