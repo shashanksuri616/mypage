@@ -24,7 +24,7 @@ const ThemeToggle = () => {
 	return (
 		<button
 			onClick={toggleTheme}
-			className="fixed top-4 right-4 z-50 bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 rounded-full p-2 shadow-lg transition-colors"
+			className="fixed top-4 right-4 z-50 bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 rounded-full p-2 shadow-lg transition-colors hover:scale-110 active:scale-95"
 			aria-label="Toggle dark mode"
 		>
 			{dark ? (
@@ -106,7 +106,7 @@ const Navbar = () => {
 					>
 						{/* Desktop Nav */}
 						<div className="hidden sm:flex gap-2 sm:gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-full shadow-lg px-2 sm:px-6 py-2 border border-gray-200 dark:border-gray-700">
-							{navItems.map((item) => (
+							{navItems.map((item, idx) => (
 								<motion.button
 									key={item.id}
 									onClick={() => {
@@ -118,14 +118,24 @@ const Navbar = () => {
 									className={`px-3 py-2 sm:px-4 sm:py-2 rounded-full font-semibold transition-all focus:outline-none
                     ${
 											active === item.id
-												? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 shadow'
+												? 'bg-gradient-to-r from-purple-200 via-fuchsia-100 to-yellow-100 dark:from-purple-900 dark:via-fuchsia-900 dark:to-yellow-900 text-purple-700 dark:text-yellow-200 shadow scale-105'
 												: 'text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-700 dark:hover:text-purple-300'
 										}
                   `}
-									whileHover={{ scale: 1.08 }}
+									whileHover={{ scale: 1.12 }}
 									whileTap={{ scale: 0.96 }}
+									transition={{ type: "spring", stiffness: 350, damping: 18 }}
 								>
-									{item.label}
+									<span className="flex items-center gap-1">
+										{item.label}
+										{active === item.id && (
+											<motion.span
+												layoutId="nav-underline"
+												className="block h-1 w-5 rounded-full bg-gradient-to-r from-purple-400 via-fuchsia-400 to-yellow-400 mt-1"
+												transition={{ type: "spring", stiffness: 400, damping: 30 }}
+											/>
+										)}
+									</span>
 								</motion.button>
 							))}
 						</div>
@@ -180,12 +190,17 @@ const Navbar = () => {
 								className={`w-11/12 max-w-xs px-4 py-3 rounded-lg font-semibold text-base transition-all
                   ${
 											active === item.id
-												? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 shadow'
+												? 'bg-gradient-to-r from-purple-200 via-fuchsia-100 to-yellow-100 dark:from-purple-900 dark:via-fuchsia-900 dark:to-yellow-900 text-purple-700 dark:text-yellow-200 shadow scale-105'
 												: 'text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-700 dark:hover:text-purple-300'
 										}
                 `}
 							>
-								{item.label}
+								<span className="flex items-center gap-1">
+									{item.label}
+									{active === item.id && (
+										<span className="block h-1 w-5 rounded-full bg-gradient-to-r from-purple-400 via-fuchsia-400 to-yellow-400 mt-1" />
+									)}
+								</span>
 							</button>
 						))}
 					</motion.div>
