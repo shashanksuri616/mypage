@@ -130,7 +130,7 @@ const ScrollFloat = () => {
         height={barHeight}
         rx="4"
         fill="#ede9fe"
-        opacity="0.45"
+        opacity="0.44"
       />
       {/* Progress bar foreground */}
       <rect
