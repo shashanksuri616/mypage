@@ -66,7 +66,7 @@ const Timeline = () => {
 			id="timeline"
 			className="py-24 px-4 sm:px-6 bg-gradient-to-br from-[#ede9fe]/70 via-[#f3e8ff]/60 to-[#fbbf24]/10 dark:from-[#18122b]/80 dark:via-[#312e81]/70 dark:to-[#000]/60 backdrop-blur-lg text-black dark:text-white transition-colors duration-300"
 		>
-			<h2 className="text-4xl font-extrabold mb-12 text-center text-purple-700 dark:text-purple-200 drop-shadow-lg tracking-tight">
+			<h2 className="text-4xl font-extrabold mb-12 text-center tracking-tight drop-shadow-lg">
 				<span className="inline-block bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
 					Timeline
 				</span>
@@ -76,10 +76,11 @@ const Timeline = () => {
 					<motion.div
 						key={item.title}
 						className={`flex items-start mb-12 group transition-transform duration-300 ${
-							item.projectId ? 'cursor-pointer hover:scale-[1.025]' : ''
+							item.projectId ? 'cursor-pointer hover:scale-[1.03]' : ''
 						}`}
 						initial={{ opacity: 0, x: -40 }}
 						whileInView={{ opacity: 1, x: 0 }}
+						viewport={{ once: true, amount: 0.2 }}
 						transition={{ duration: 0.7, delay: i * 0.12 }}
 						onClick={() => {
 							if (item.projectId) {
