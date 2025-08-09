@@ -76,7 +76,7 @@ const Timeline = () => {
 					<motion.div
 						key={item.title}
 						className={`flex items-start mb-12 group transition-transform duration-300 ${
-							item.projectId ? 'cursor-pointer hover:scale-[1.03]' : ''
+							item.projectId ? 'cursor-pointer hover:scale-[1.04] hover:shadow-xl' : ''
 						}`}
 						initial={{ opacity: 0, x: -40 }}
 						whileInView={{ opacity: 1, x: 0 }}
@@ -109,7 +109,13 @@ const Timeline = () => {
 					>
 						{/* Timeline Dot & Line */}
 						<div className="flex flex-col items-center mr-6 relative">
-							<div className="w-5 h-5 bg-gradient-to-br from-purple-400 via-fuchsia-400 to-yellow-400 rounded-full shadow-lg border-2 border-white dark:border-gray-900 mb-1 animate-pulse group-hover:scale-110 transition-transform" />
+							<motion.div
+								className="w-6 h-6 bg-gradient-to-br from-purple-400 via-fuchsia-400 to-yellow-400 rounded-full shadow-lg border-2 border-white dark:border-gray-900 mb-1 flex items-center justify-center"
+								animate={open === i ? { scale: 1.18, boxShadow: "0 0 0 6px #fbbf2466" } : { scale: 1, boxShadow: "0 2px 12px #a78bfa55" }}
+								transition={{ type: "spring", stiffness: 300, damping: 18 }}
+							>
+								<span className="block w-2 h-2 bg-white dark:bg-gray-900 rounded-full" />
+							</motion.div>
 							{i < timeline.length - 1 && (
 								<div className="w-1 flex-1 bg-gradient-to-b from-purple-200 via-fuchsia-200 to-yellow-100 dark:from-purple-900 dark:via-fuchsia-900 dark:to-yellow-900 opacity-70" />
 							)}
@@ -132,7 +138,7 @@ const Timeline = () => {
 										initial={{ opacity: 0, y: 10 }}
 										animate={{ opacity: 1, y: 0 }}
 										exit={{ opacity: 0, y: 10 }}
-										className="mt-3 p-4 bg-white/90 dark:bg-gray-800/90 rounded-xl shadow-lg text-sm text-gray-800 dark:text-gray-100 border border-purple-200 dark:border-purple-700 transition-all duration-300"
+										className="mt-3 p-4 bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg text-sm text-gray-800 dark:text-gray-100 border border-purple-200 dark:border-purple-700 transition-all duration-300"
 									>
 										{item.details}
 									</motion.div>
