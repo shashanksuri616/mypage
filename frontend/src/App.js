@@ -13,6 +13,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';  
 import ScrollFloat from './components/ScrollFloat';
 import GameSideTab from './components/GameSideTab';
+import SnakeTab from './components/SnakeTab';
 
 const BlobBackground = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -88,6 +89,7 @@ function App() {
       <BlobBackground />
       {/*<ScrollFloat/>*/}
       <GameSideTab/>
+      <SnakeTab />
       <Navbar />
       <Hero />
       <About />
