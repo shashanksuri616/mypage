@@ -17,6 +17,9 @@ function getRandomFood(snake) {
   return food;
 }
 
+const SPEEDS = [180, 120, 80, 50];
+const SPEED_LABELS = ["Easy", "Normal", "Fast", "Insane"];
+
 const SnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -24,6 +27,7 @@ const SnakeGame = () => {
   const [running, setRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [speedIdx, setSpeedIdx] = useState(1);
   const moveRef = useRef(direction);
 
   useEffect(() => {
@@ -53,9 +57,9 @@ const SnakeGame = () => {
         }
         return newSnake;
       });
-    }, 120);
+    }, SPEEDS[speedIdx]);
     return () => clearInterval(interval);
-  }, [running, food, gameOver]);
+  }, [running, food, gameOver, speedIdx]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -93,6 +97,19 @@ const SnakeGame = () => {
       <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
         Snake Game
       </h2>
+      <div className="flex items-center gap-4 mb-2">
+        <span className="font-semibold text-purple-700 dark:text-yellow-200">Speed:</span>
+        {SPEED_LABELS.map((label, idx) => (
+          <button
+            key={label}
+            className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${speedIdx === idx ? "bg-purple-500 text-white border-purple-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+            onClick={() => setSpeedIdx(idx)}
+            disabled={running}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       <div
         className="grid"
         style={{
