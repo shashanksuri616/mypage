@@ -28,6 +28,7 @@ const SnakeGame = () => {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [speedIdx, setSpeedIdx] = useState(1);
+  const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeHighScore")) || 0);
   const moveRef = useRef(direction);
 
   useEffect(() => {
@@ -45,6 +46,10 @@ const SnakeGame = () => {
         if (prev.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
           setGameOver(true);
           setRunning(false);
+          if (score > highScore) {
+            setHighScore(score);
+            localStorage.setItem("snakeHighScore", score);
+          }
           return prev;
         }
         let newSnake;
@@ -59,7 +64,7 @@ const SnakeGame = () => {
       });
     }, SPEEDS[speedIdx]);
     return () => clearInterval(interval);
-  }, [running, food, gameOver, speedIdx]);
+  }, [running, food, gameOver, speedIdx, score, highScore]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -143,6 +148,7 @@ const SnakeGame = () => {
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white rounded-lg z-10">
             <div className="text-2xl font-bold mb-2">Game Over</div>
             <div className="mb-2">Score: {score}</div>
+            <div className="mb-2">High Score: {highScore}</div>
             <button
               className="px-4 py-2 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 rounded-lg font-semibold mt-2"
               onClick={restart}
@@ -154,7 +160,7 @@ const SnakeGame = () => {
         )}
       </div>
       <div className="mt-4 text-lg font-semibold text-purple-700 dark:text-yellow-200">
-        Score: {score}
+        Score: {score} &nbsp; | &nbsp; High Score: {highScore}
       </div>
       {!running && !gameOver && (
         <div className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
