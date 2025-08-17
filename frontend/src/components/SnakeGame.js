@@ -29,6 +29,7 @@ const SnakeGame = () => {
   const [score, setScore] = useState(0);
   const [speedIdx, setSpeedIdx] = useState(1);
   const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeHighScore")) || 0);
+  const [paused, setPaused] = useState(false);
   const moveRef = useRef(direction);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const SnakeGame = () => {
   }, [direction]);
 
   useEffect(() => {
-    if (!running || gameOver) return;
+    if (!running || gameOver || paused) return;
     const interval = setInterval(() => {
       setSnake(prev => {
         const newHead = {
@@ -64,7 +65,7 @@ const SnakeGame = () => {
       });
     }, SPEEDS[speedIdx]);
     return () => clearInterval(interval);
-  }, [running, food, gameOver, speedIdx, score, highScore]);
+  }, [running, food, gameOver, speedIdx, score, highScore, paused]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -74,7 +75,10 @@ const SnakeGame = () => {
       if (gameOver && e.key === " ") {
         restart();
       }
-      if (!running) return;
+      if (e.key === "p" || e.key === "P") {
+        if (running && !gameOver) setPaused(p => !p);
+      }
+      if (!running || paused) return;
       setDirection(dir => {
         if (e.key === "ArrowUp" && dir.y !== 1) return { x: 0, y: -1 };
         if (e.key === "ArrowDown" && dir.y !== -1) return { x: 0, y: 1 };
@@ -86,7 +90,7 @@ const SnakeGame = () => {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
     // eslint-disable-next-line
-  }, [running, gameOver]);
+  }, [running, gameOver, paused]);
 
   const restart = () => {
     setSnake(INITIAL_SNAKE);
@@ -95,6 +99,7 @@ const SnakeGame = () => {
     setScore(0);
     setGameOver(false);
     setRunning(false);
+    setPaused(false);
   };
 
   return (
@@ -114,6 +119,13 @@ const SnakeGame = () => {
             {label}
           </button>
         ))}
+        <button
+          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${paused ? "bg-yellow-400 text-white border-yellow-600" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          onClick={() => setPaused(p => !p)}
+          disabled={!running || gameOver}
+        >
+          {paused ? "Resume" : "Pause"}
+        </button>
       </div>
       <div
         className="grid"
@@ -158,13 +170,22 @@ const SnakeGame = () => {
             <div className="mt-2 text-sm text-gray-200">Press [Space] to restart</div>
           </div>
         )}
+        {paused && running && !gameOver && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white rounded-lg z-10">
+            <div className="text-2xl font-bold mb-2">Paused</div>
+            <div className="mb-2">Score: {score}</div>
+            <div className="mb-2">High Score: {highScore}</div>
+            <div className="mt-2 text-sm text-gray-200">Press [P] or Pause to resume</div>
+          </div>
+        )}
       </div>
       <div className="mt-4 text-lg font-semibold text-purple-700 dark:text-yellow-200">
         Score: {score} &nbsp; | &nbsp; High Score: {highScore}
       </div>
       {!running && !gameOver && (
         <div className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
-          Use arrow keys to start and control the snake!
+          Use arrow keys to start and control the snake! <br />
+          Press <span className="font-bold">P</span> or Pause to pause/resume.
         </div>
       )}
     </div>
