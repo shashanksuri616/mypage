@@ -20,6 +20,17 @@ function getRandomFood(snake) {
 const SPEEDS = [180, 120, 80, 50];
 const SPEED_LABELS = ["Easy", "Normal", "Fast", "Insane"];
 
+const COLORS = [
+  "bg-purple-500",
+  "bg-fuchsia-400",
+  "bg-yellow-400",
+  "bg-green-400",
+  "bg-blue-400",
+  "bg-pink-400",
+  "bg-red-400",
+  "bg-indigo-400",
+];
+
 const SnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -143,12 +154,17 @@ const SnakeGame = () => {
         {[...Array(BOARD_SIZE * BOARD_SIZE)].map((_, i) => {
           const x = i % BOARD_SIZE, y = Math.floor(i / BOARD_SIZE);
           const isHead = snake[0].x === x && snake[0].y === y;
-          const isBody = snake.slice(1).some(seg => seg.x === x && seg.y === y);
+          const bodyIdx = snake.slice(1).findIndex(seg => seg.x === x && seg.y === y);
+          const isBody = bodyIdx !== -1;
           const isFood = food.x === x && food.y === y;
+          let cellColor = "bg-white/60 dark:bg-gray-800/60";
+          if (isHead) cellColor = COLORS[0];
+          else if (isBody) cellColor = COLORS[(bodyIdx + 1) % COLORS.length];
+          else if (isFood) cellColor = COLORS[2];
           return (
             <div
               key={i}
-              className={`w-6 h-6 sm:w-7 sm:h-7 border border-white/40 dark:border-gray-900/40 rounded ${isHead ? "bg-purple-500" : isBody ? "bg-fuchsia-400" : isFood ? "bg-yellow-400" : "bg-white/60 dark:bg-gray-800/60"}`}
+              className={`w-6 h-6 sm:w-7 sm:h-7 border border-white/40 dark:border-gray-900/40 rounded ${cellColor}`}
               style={{
                 boxShadow: isHead ? "0 0 8px #a78bfa" : isFood ? "0 0 8px #fbbf24" : undefined,
                 transition: "background 0.1s"
