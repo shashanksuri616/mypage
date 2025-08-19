@@ -41,6 +41,7 @@ const SnakeGame = () => {
   const [speedIdx, setSpeedIdx] = useState(1);
   const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeHighScore")) || 0);
   const [paused, setPaused] = useState(false);
+  const [walls, setWalls] = useState(false);
   const moveRef = useRef(direction);
 
   useEffect(() => {
@@ -51,10 +52,31 @@ const SnakeGame = () => {
     if (!running || gameOver || paused) return;
     const interval = setInterval(() => {
       setSnake(prev => {
-        const newHead = {
-          x: (prev[0].x + moveRef.current.x + BOARD_SIZE) % BOARD_SIZE,
-          y: (prev[0].y + moveRef.current.y + BOARD_SIZE) % BOARD_SIZE,
+        let newHead = {
+          x: prev[0].x + moveRef.current.x,
+          y: prev[0].y + moveRef.current.y,
         };
+        // Wall mode: game over if hit wall
+        if (walls) {
+          if (
+            newHead.x < 0 ||
+            newHead.x >= BOARD_SIZE ||
+            newHead.y < 0 ||
+            newHead.y >= BOARD_SIZE
+          ) {
+            setGameOver(true);
+            setRunning(false);
+            if (score > highScore) {
+              setHighScore(score);
+              localStorage.setItem("snakeHighScore", score);
+            }
+            return prev;
+          }
+        } else {
+          // Wrap mode
+          newHead.x = (newHead.x + BOARD_SIZE) % BOARD_SIZE;
+          newHead.y = (newHead.y + BOARD_SIZE) % BOARD_SIZE;
+        }
         if (prev.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
           setGameOver(true);
           setRunning(false);
@@ -76,7 +98,7 @@ const SnakeGame = () => {
       });
     }, SPEEDS[speedIdx]);
     return () => clearInterval(interval);
-  }, [running, food, gameOver, speedIdx, score, highScore, paused]);
+  }, [running, food, gameOver, speedIdx, score, highScore, paused, walls]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -118,7 +140,7 @@ const SnakeGame = () => {
       <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
         Snake Game
       </h2>
-      <div className="flex items-center gap-4 mb-2">
+      <div className="flex items-center gap-4 mb-2 flex-wrap">
         <span className="font-semibold text-purple-700 dark:text-yellow-200">Speed:</span>
         {SPEED_LABELS.map((label, idx) => (
           <button
@@ -136,6 +158,13 @@ const SnakeGame = () => {
           disabled={!running || gameOver}
         >
           {paused ? "Resume" : "Pause"}
+        </button>
+        <button
+          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${walls ? "bg-red-500 text-white border-red-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          onClick={() => setWalls(w => !w)}
+          disabled={running}
+        >
+          {walls ? "Walls: ON" : "Walls: OFF"}
         </button>
       </div>
       <div
@@ -201,7 +230,8 @@ const SnakeGame = () => {
       {!running && !gameOver && (
         <div className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
           Use arrow keys to start and control the snake! <br />
-          Press <span className="font-bold">P</span> or Pause to pause/resume.
+          Press <span className="font-bold">P</span> or Pause to pause/resume.<br />
+          Walls mode: {walls ? "ON (snake dies at edge)" : "OFF (snake wraps around)"}
         </div>
       )}
     </div>
