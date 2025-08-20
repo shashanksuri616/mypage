@@ -50,7 +50,9 @@ const SnakeTab = () => {
               >
                 &times;
               </button>
-              <SnakeGame />
+              <div className="flex-1 flex items-center justify-center">
+                <SnakeGame />
+              </div>
             </motion.div>
           </motion.div>
         )}
