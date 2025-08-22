@@ -31,6 +31,10 @@ const COLORS = [
   "bg-indigo-400",
 ];
 
+const EMOJIS = [
+  "🟣", "🟪", "🟡", "🟩", "🔵", "🟫", "🟥", "🟦"
+];
+
 const SnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -42,6 +46,7 @@ const SnakeGame = () => {
   const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeHighScore")) || 0);
   const [paused, setPaused] = useState(false);
   const [walls, setWalls] = useState(false);
+  const [emojiMode, setEmojiMode] = useState(false);
   const moveRef = useRef(direction);
 
   useEffect(() => {
@@ -166,6 +171,13 @@ const SnakeGame = () => {
         >
           {walls ? "Walls: ON" : "Walls: OFF"}
         </button>
+        <button
+          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${emojiMode ? "bg-blue-500 text-white border-blue-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          onClick={() => setEmojiMode(e => !e)}
+          disabled={running}
+        >
+          {emojiMode ? "Emoji: ON" : "Emoji: OFF"}
+        </button>
       </div>
       <div
         className="grid"
@@ -193,12 +205,22 @@ const SnakeGame = () => {
           return (
             <div
               key={i}
-              className={`w-6 h-6 sm:w-7 sm:h-7 border border-white/40 dark:border-gray-900/40 rounded ${cellColor}`}
+              className={`w-6 h-6 sm:w-7 sm:h-7 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-lg`}
               style={{
                 boxShadow: isHead ? "0 0 8px #a78bfa" : isFood ? "0 0 8px #fbbf24" : undefined,
                 transition: "background 0.1s"
               }}
-            />
+            >
+              {emojiMode
+                ? isHead
+                  ? EMOJIS[0]
+                  : isBody
+                  ? EMOJIS[(bodyIdx + 1) % EMOJIS.length]
+                  : isFood
+                  ? "🍪"
+                  : ""
+                : ""}
+            </div>
           );
         })}
         {gameOver && (
@@ -231,7 +253,8 @@ const SnakeGame = () => {
         <div className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
           Use arrow keys to start and control the snake! <br />
           Press <span className="font-bold">P</span> or Pause to pause/resume.<br />
-          Walls mode: {walls ? "ON (snake dies at edge)" : "OFF (snake wraps around)"}
+          Walls mode: {walls ? "ON (snake dies at edge)" : "OFF (snake wraps around)"}<br />
+          Emoji mode: {emojiMode ? "ON" : "OFF"}
         </div>
       )}
     </div>
