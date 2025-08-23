@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const COLORS = [
+	'from-purple-400 via-fuchsia-400 to-yellow-400',
+	'from-green-400 via-blue-400 to-indigo-400',
+	'from-pink-400 via-red-400 to-yellow-400',
+	'from-indigo-400 via-purple-400 to-pink-400',
+	'from-yellow-400 via-orange-400 to-red-400',
+	'from-blue-400 via-cyan-400 to-green-400',
+];
+
 const timeline = [
 	{
 		year: '2025',
@@ -76,7 +85,7 @@ const Timeline = () => {
 					<motion.div
 						key={item.title}
 						className={`flex items-start mb-12 group transition-transform duration-300 ${
-							item.projectId ? 'cursor-pointer hover:scale-[1.04] hover:shadow-xl' : ''
+							item.projectId ? 'cursor-pointer hover:scale-[1.05] hover:shadow-2xl' : ''
 						}`}
 						initial={{ opacity: 0, x: -40 }}
 						whileInView={{ opacity: 1, x: 0 }}
@@ -110,14 +119,14 @@ const Timeline = () => {
 						{/* Timeline Dot & Line */}
 						<div className="flex flex-col items-center mr-6 relative">
 							<motion.div
-								className="w-6 h-6 bg-gradient-to-br from-purple-400 via-fuchsia-400 to-yellow-400 rounded-full shadow-lg border-2 border-white dark:border-gray-900 mb-1 flex items-center justify-center"
-								animate={open === i ? { scale: 1.18, boxShadow: "0 0 0 6px #fbbf2466" } : { scale: 1, boxShadow: "0 2px 12px #a78bfa55" }}
-								transition={{ type: "spring", stiffness: 300, damping: 18 }}
+								className={`w-7 h-7 rounded-full shadow-lg border-2 border-white dark:border-gray-900 mb-1 flex items-center justify-center bg-gradient-to-br ${COLORS[i % COLORS.length]}`}
+								animate={open === i ? { scale: 1.22, boxShadow: '0 0 0 8px #fbbf2466' } : { scale: 1, boxShadow: '0 2px 12px #a78bfa55' }}
+								transition={{ type: 'spring', stiffness: 300, damping: 18 }}
 							>
 								<span className="block w-2 h-2 bg-white dark:bg-gray-900 rounded-full" />
 							</motion.div>
 							{i < timeline.length - 1 && (
-								<div className="w-1 flex-1 bg-gradient-to-b from-purple-200 via-fuchsia-200 to-yellow-100 dark:from-purple-900 dark:via-fuchsia-900 dark:to-yellow-900 opacity-70" />
+								<div className={`w-1 flex-1 bg-gradient-to-b ${COLORS[i % COLORS.length]} opacity-70`} />
 							)}
 						</div>
 						{/* Timeline Content */}
@@ -138,7 +147,7 @@ const Timeline = () => {
 										initial={{ opacity: 0, y: 10 }}
 										animate={{ opacity: 1, y: 0 }}
 										exit={{ opacity: 0, y: 10 }}
-										className="mt-3 p-4 bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-lg text-sm text-gray-800 dark:text-gray-100 border border-purple-200 dark:border-purple-700 transition-all duration-300"
+										className="mt-3 p-4 bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-xl text-sm text-gray-800 dark:text-gray-100 border border-purple-200 dark:border-purple-700 transition-all duration-300"
 									>
 										{item.details}
 									</motion.div>
