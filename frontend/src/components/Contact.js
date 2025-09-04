@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+// Rainbow gradient backgrounds for social icons
+const SOCIAL_GRADIENTS = [
+  "from-purple-400 via-fuchsia-400 to-yellow-400",
+  "from-green-400 via-blue-400 to-indigo-400",
+  "from-pink-400 via-red-400 to-yellow-400",
+  "from-indigo-400 via-purple-400 to-pink-400",
+];
+
 const socials = [
   {
     name: "LinkedIn",
@@ -87,24 +95,30 @@ const Contact = () => {
       <div className="max-w-4xl mx-auto relative z-10 bg-white/30 dark:bg-gray-900/30 backdrop-blur-md rounded-2xl shadow-lg p-0 border border-transparent flex flex-col md:flex-row gap-10">
         {/* Left: Contact Info & Socials */}
         <div className="flex-1 flex flex-col justify-center items-center py-10 px-4 md:px-8">
-          <h2 className="text-5xl font-bold mb-4 text-center">Get in Touch</h2>
+          <h2 className="text-5xl font-bold mb-4 text-center bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
+            Get in Touch
+          </h2>
           <p className="text-lg text-center mb-6">
             Have a question, want to collaborate, or just want to say hi? <br />
             Drop a message or connect with me on your favorite platform!
           </p>
           <div className="flex flex-col items-center gap-3">
             <div className="flex justify-center space-x-8 mb-2">
-              {socials.map(s => (
-                <a
+              {socials.map((s, i) => (
+                <span
                   key={s.name}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-purple-500 dark:hover:text-yellow-400 transition-all duration-300"
-                  aria-label={s.name}
+                  className={`p-2 rounded-full bg-gradient-to-br ${SOCIAL_GRADIENTS[i % SOCIAL_GRADIENTS.length]} shadow-lg hover:scale-110 transition-all duration-300`}
                 >
-                  {s.icon}
-                </a>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white dark:text-yellow-200"
+                    aria-label={s.name}
+                  >
+                    {s.icon}
+                  </a>
+                </span>
               ))}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
