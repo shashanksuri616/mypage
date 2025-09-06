@@ -35,6 +35,8 @@ const EMOJIS = [
   "🟣", "🟪", "🟡", "🟩", "🔵", "🟫", "🟥", "🟦"
 ];
 
+const FOOD_EMOJIS = ["🍪", "🍎", "🍉", "🍒", "🍋", "🍇", "🍓", "🥝"];
+
 const SnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -47,7 +49,18 @@ const SnakeGame = () => {
   const [paused, setPaused] = useState(false);
   const [walls, setWalls] = useState(false);
   const [emojiMode, setEmojiMode] = useState(false);
+  const [foodEmojiIdx, setFoodEmojiIdx] = useState(0);
+  const [theme, setTheme] = useState("classic");
   const moveRef = useRef(direction);
+
+  // Theme presets for more fun
+  const THEMES = [
+    { name: "Classic", colors: COLORS, emojis: EMOJIS, food: FOOD_EMOJIS },
+    { name: "Ocean", colors: ["bg-blue-400", "bg-cyan-400", "bg-teal-400", "bg-indigo-400"], emojis: ["🌊", "🐟", "🐠", "🐬"], food: ["🐚", "🦀", "🦑", "🦞"] },
+    { name: "Fire", colors: ["bg-red-500", "bg-orange-400", "bg-yellow-400"], emojis: ["🔥", "🧨", "🌶️"], food: ["🌽", "🍗", "🍖"] },
+    { name: "Nature", colors: ["bg-green-400", "bg-lime-400", "bg-emerald-400"], emojis: ["🌱", "🍀", "🌲"], food: ["🍏", "🥦", "🥒"] },
+  ];
+  const currentTheme = THEMES.find(t => t.name.toLowerCase() === theme) || THEMES[0];
 
   useEffect(() => {
     moveRef.current = direction;
@@ -178,6 +191,18 @@ const SnakeGame = () => {
         >
           {emojiMode ? "Emoji: ON" : "Emoji: OFF"}
         </button>
+        <select
+          value={theme}
+          onChange={(e) => setTheme(e.target.value)}
+          className="px-2 py-1 rounded-lg font-semibold text-sm transition-all border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"
+          disabled={running}
+        >
+          {THEMES.map(t => (
+            <option key={t.name} value={t.name.toLowerCase()} className="bg-white dark:bg-gray-800">
+              {t.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div
         className="grid"
@@ -199,9 +224,9 @@ const SnakeGame = () => {
           const isBody = bodyIdx !== -1;
           const isFood = food.x === x && food.y === y;
           let cellColor = "bg-white/60 dark:bg-gray-800/60";
-          if (isHead) cellColor = COLORS[0];
-          else if (isBody) cellColor = COLORS[(bodyIdx + 1) % COLORS.length];
-          else if (isFood) cellColor = COLORS[2];
+          if (isHead) cellColor = currentTheme.colors[0];
+          else if (isBody) cellColor = currentTheme.colors[(bodyIdx + 1) % currentTheme.colors.length];
+          else if (isFood) cellColor = currentTheme.colors[2];
           return (
             <div
               key={i}
@@ -213,9 +238,9 @@ const SnakeGame = () => {
             >
               {emojiMode
                 ? isHead
-                  ? EMOJIS[0]
+                  ? currentTheme.emojis[0]
                   : isBody
-                  ? EMOJIS[(bodyIdx + 1) % EMOJIS.length]
+                  ? currentTheme.emojis[(bodyIdx + 1) % currentTheme.emojis.length]
                   : isFood
                   ? "🍪"
                   : ""
