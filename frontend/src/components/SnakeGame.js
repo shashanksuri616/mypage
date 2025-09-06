@@ -108,6 +108,7 @@ const SnakeGame = () => {
         if (newHead.x === food.x && newHead.y === food.y) {
           setFood(getRandomFood([newHead, ...prev]));
           setScore(s => s + 1);
+          setFoodEmojiIdx(idx => (idx + 1) % currentTheme.food.length);
           newSnake = [newHead, ...prev];
         } else {
           newSnake = [newHead, ...prev.slice(0, -1)];
@@ -116,7 +117,7 @@ const SnakeGame = () => {
       });
     }, SPEEDS[speedIdx]);
     return () => clearInterval(interval);
-  }, [running, food, gameOver, speedIdx, score, highScore, paused, walls]);
+  }, [running, food, gameOver, speedIdx, score, highScore, paused, walls, currentTheme.food.length]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -151,6 +152,7 @@ const SnakeGame = () => {
     setGameOver(false);
     setRunning(false);
     setPaused(false);
+    setFoodEmojiIdx(0);
   };
 
   return (
@@ -192,15 +194,14 @@ const SnakeGame = () => {
           {emojiMode ? "Emoji: ON" : "Emoji: OFF"}
         </button>
         <select
+          className="px-2 py-1 rounded-lg font-semibold text-sm border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700 transition"
           value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          className="px-2 py-1 rounded-lg font-semibold text-sm transition-all border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"
+          onChange={e => setTheme(e.target.value)}
           disabled={running}
+          aria-label="Theme"
         >
           {THEMES.map(t => (
-            <option key={t.name} value={t.name.toLowerCase()} className="bg-white dark:bg-gray-800">
-              {t.name}
-            </option>
+            <option key={t.name} value={t.name.toLowerCase()}>{t.name}</option>
           ))}
         </select>
       </div>
@@ -224,9 +225,9 @@ const SnakeGame = () => {
           const isBody = bodyIdx !== -1;
           const isFood = food.x === x && food.y === y;
           let cellColor = "bg-white/60 dark:bg-gray-800/60";
-          if (isHead) cellColor = currentTheme.colors[0];
+          if (isHead) cellColor = currentTheme.colors[0 % currentTheme.colors.length];
           else if (isBody) cellColor = currentTheme.colors[(bodyIdx + 1) % currentTheme.colors.length];
-          else if (isFood) cellColor = currentTheme.colors[2];
+          else if (isFood) cellColor = currentTheme.colors[2 % currentTheme.colors.length];
           return (
             <div
               key={i}
@@ -238,11 +239,11 @@ const SnakeGame = () => {
             >
               {emojiMode
                 ? isHead
-                  ? currentTheme.emojis[0]
+                  ? currentTheme.emojis[0 % currentTheme.emojis.length]
                   : isBody
                   ? currentTheme.emojis[(bodyIdx + 1) % currentTheme.emojis.length]
                   : isFood
-                  ? "🍪"
+                  ? currentTheme.food[foodEmojiIdx % currentTheme.food.length]
                   : ""
                 : ""}
             </div>
@@ -279,7 +280,8 @@ const SnakeGame = () => {
           Use arrow keys to start and control the snake! <br />
           Press <span className="font-bold">P</span> or Pause to pause/resume.<br />
           Walls mode: {walls ? "ON (snake dies at edge)" : "OFF (snake wraps around)"}<br />
-          Emoji mode: {emojiMode ? "ON" : "OFF"}
+          Emoji mode: {emojiMode ? "ON" : "OFF"}<br />
+          Theme: <span className="font-bold">{currentTheme.name}</span>
         </div>
       )}
     </div>
