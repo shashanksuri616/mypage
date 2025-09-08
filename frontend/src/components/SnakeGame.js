@@ -20,22 +20,41 @@ function getRandomFood(snake) {
 const SPEEDS = [180, 120, 80, 50];
 const SPEED_LABELS = ["Easy", "Normal", "Fast", "Insane"];
 
-const COLORS = [
-  "bg-purple-500",
-  "bg-fuchsia-400",
-  "bg-yellow-400",
-  "bg-green-400",
-  "bg-blue-400",
-  "bg-pink-400",
-  "bg-red-400",
-  "bg-indigo-400",
+const THEMES = [
+  {
+    name: "Classic",
+    colors: [
+      "bg-purple-500",
+      "bg-fuchsia-400",
+      "bg-yellow-400",
+      "bg-green-400",
+      "bg-blue-400",
+      "bg-pink-400",
+      "bg-red-400",
+      "bg-indigo-400",
+    ],
+    emojis: ["🟣", "🟪", "🟡", "🟩", "🔵", "🟫", "🟥", "🟦"],
+    food: ["🍪", "🍎", "🍉", "🍒", "🍋", "🍇", "🍓", "🥝"],
+  },
+  {
+    name: "Ocean",
+    colors: ["bg-blue-400", "bg-cyan-400", "bg-teal-400", "bg-indigo-400"],
+    emojis: ["🌊", "🐟", "🐠", "🐬"],
+    food: ["🐚", "🦀", "🦑", "🦞"],
+  },
+  {
+    name: "Fire",
+    colors: ["bg-red-500", "bg-orange-400", "bg-yellow-400"],
+    emojis: ["🔥", "🧨", "🌶️"],
+    food: ["🌽", "🍗", "🍖"],
+  },
+  {
+    name: "Nature",
+    colors: ["bg-green-400", "bg-lime-400", "bg-emerald-400"],
+    emojis: ["🌱", "🍀", "🌲"],
+    food: ["🍏", "🥦", "🥒"],
+  },
 ];
-
-const EMOJIS = [
-  "🟣", "🟪", "🟡", "🟩", "🔵", "🟫", "🟥", "🟦"
-];
-
-const FOOD_EMOJIS = ["🍪", "🍎", "🍉", "🍒", "🍋", "🍇", "🍓", "🥝"];
 
 const SnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
@@ -53,13 +72,6 @@ const SnakeGame = () => {
   const [theme, setTheme] = useState("classic");
   const moveRef = useRef(direction);
 
-  // Theme presets for more fun
-  const THEMES = [
-    { name: "Classic", colors: COLORS, emojis: EMOJIS, food: FOOD_EMOJIS },
-    { name: "Ocean", colors: ["bg-blue-400", "bg-cyan-400", "bg-teal-400", "bg-indigo-400"], emojis: ["🌊", "🐟", "🐠", "🐬"], food: ["🐚", "🦀", "🦑", "🦞"] },
-    { name: "Fire", colors: ["bg-red-500", "bg-orange-400", "bg-yellow-400"], emojis: ["🔥", "🧨", "🌶️"], food: ["🌽", "🍗", "🍖"] },
-    { name: "Nature", colors: ["bg-green-400", "bg-lime-400", "bg-emerald-400"], emojis: ["🌱", "🍀", "🌲"], food: ["🍏", "🥦", "🥒"] },
-  ];
   const currentTheme = THEMES.find(t => t.name.toLowerCase() === theme) || THEMES[0];
 
   useEffect(() => {
