@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
-const BOARD_SIZE = 15;
+const BOARD_SIZE = 10;
 const INITIAL_SNAKE = [
-  { x: 7, y: 7 },
+  { x: 5, y: 5 },
 ];
 const INITIAL_DIRECTION = { x: 0, y: -1 };
 
@@ -17,7 +17,7 @@ function getRandomFood(snake) {
   return food;
 }
 
-const SPEEDS = [180, 120, 80, 50];
+const SPEEDS = [220, 140, 90, 60];
 const SPEED_LABELS = ["Easy", "Normal", "Fast", "Insane"];
 
 const THEMES = [
@@ -64,7 +64,7 @@ const SnakeGame = () => {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [speedIdx, setSpeedIdx] = useState(1);
-  const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeHighScore")) || 0);
+  const [highScore, setHighScore] = useState(() => Number(localStorage.getItem("snakeMiniHighScore")) || 0);
   const [paused, setPaused] = useState(false);
   const [walls, setWalls] = useState(false);
   const [emojiMode, setEmojiMode] = useState(false);
@@ -98,7 +98,7 @@ const SnakeGame = () => {
             setRunning(false);
             if (score > highScore) {
               setHighScore(score);
-              localStorage.setItem("snakeHighScore", score);
+              localStorage.setItem("snakeMiniHighScore", score);
             }
             return prev;
           }
@@ -112,7 +112,7 @@ const SnakeGame = () => {
           setRunning(false);
           if (score > highScore) {
             setHighScore(score);
-            localStorage.setItem("snakeHighScore", score);
+            localStorage.setItem("snakeMiniHighScore", score);
           }
           return prev;
         }
@@ -168,16 +168,16 @@ const SnakeGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] py-8">
-      <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
-        Snake Game
+    <div className="flex flex-col items-center justify-center min-h-[40vh] py-4">
+      <h2 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
+        Mini Snake
       </h2>
-      <div className="flex items-center gap-4 mb-2 flex-wrap">
-        <span className="font-semibold text-purple-700 dark:text-yellow-200">Speed:</span>
+      <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <span className="font-semibold text-purple-700 dark:text-yellow-200 text-xs">Speed:</span>
         {SPEED_LABELS.map((label, idx) => (
           <button
             key={label}
-            className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${speedIdx === idx ? "bg-purple-500 text-white border-purple-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+            className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${speedIdx === idx ? "bg-purple-500 text-white border-purple-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
             onClick={() => setSpeedIdx(idx)}
             disabled={running}
           >
@@ -185,28 +185,28 @@ const SnakeGame = () => {
           </button>
         ))}
         <button
-          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${paused ? "bg-yellow-400 text-white border-yellow-600" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${paused ? "bg-yellow-400 text-white border-yellow-600" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setPaused(p => !p)}
           disabled={!running || gameOver}
         >
           {paused ? "Resume" : "Pause"}
         </button>
         <button
-          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${walls ? "bg-red-500 text-white border-red-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${walls ? "bg-red-500 text-white border-red-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setWalls(w => !w)}
           disabled={running}
         >
           {walls ? "Walls: ON" : "Walls: OFF"}
         </button>
         <button
-          className={`px-2 py-1 rounded-lg font-semibold text-sm transition-all border ${emojiMode ? "bg-blue-500 text-white border-blue-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
+          className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${emojiMode ? "bg-blue-500 text-white border-blue-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setEmojiMode(e => !e)}
           disabled={running}
         >
           {emojiMode ? "Emoji: ON" : "Emoji: OFF"}
         </button>
         <select
-          className="px-2 py-1 rounded-lg font-semibold text-sm border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700 transition"
+          className="px-1.5 py-0.5 rounded-lg font-semibold text-xs border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700 transition"
           value={theme}
           onChange={e => setTheme(e.target.value)}
           disabled={running}
@@ -220,11 +220,11 @@ const SnakeGame = () => {
       <div
         className="grid"
         style={{
-          gridTemplateRows: `repeat(${BOARD_SIZE}, 1.5rem)`,
-          gridTemplateColumns: `repeat(${BOARD_SIZE}, 1.5rem)`,
+          gridTemplateRows: `repeat(${BOARD_SIZE}, 1.1rem)`,
+          gridTemplateColumns: `repeat(${BOARD_SIZE}, 1.1rem)`,
           background: "linear-gradient(135deg, #ede9fe 60%, #fbbf24 100%)",
-          borderRadius: 16,
-          boxShadow: "0 4px 32px #a78bfa22",
+          borderRadius: 12,
+          boxShadow: "0 2px 16px #a78bfa22",
           border: "2px solid #a78bfa",
           position: "relative",
         }}
@@ -243,9 +243,9 @@ const SnakeGame = () => {
           return (
             <div
               key={i}
-              className={`w-6 h-6 sm:w-7 sm:h-7 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-lg`}
+              className={`w-4 h-4 sm:w-5 sm:h-5 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-xs`}
               style={{
-                boxShadow: isHead ? "0 0 8px #a78bfa" : isFood ? "0 0 8px #fbbf24" : undefined,
+                boxShadow: isHead ? "0 0 4px #a78bfa" : isFood ? "0 0 4px #fbbf24" : undefined,
                 transition: "background 0.1s"
               }}
             >
@@ -263,36 +263,34 @@ const SnakeGame = () => {
         })}
         {gameOver && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white rounded-lg z-10">
-            <div className="text-2xl font-bold mb-2">Game Over</div>
-            <div className="mb-2">Score: {score}</div>
-            <div className="mb-2">High Score: {highScore}</div>
+            <div className="text-lg font-bold mb-1">Game Over</div>
+            <div className="mb-1 text-sm">Score: {score}</div>
+            <div className="mb-1 text-sm">High Score: {highScore}</div>
             <button
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 rounded-lg font-semibold mt-2"
+              className="px-3 py-1 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 rounded-lg font-semibold mt-2 text-xs"
               onClick={restart}
             >
               Restart
             </button>
-            <div className="mt-2 text-sm text-gray-200">Press [Space] to restart</div>
+            <div className="mt-1 text-xs text-gray-200">Press [Space] to restart</div>
           </div>
         )}
         {paused && running && !gameOver && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white rounded-lg z-10">
-            <div className="text-2xl font-bold mb-2">Paused</div>
-            <div className="mb-2">Score: {score}</div>
-            <div className="mb-2">High Score: {highScore}</div>
-            <div className="mt-2 text-sm text-gray-200">Press [P] or Pause to resume</div>
+            <div className="text-lg font-bold mb-1">Paused</div>
+            <div className="mb-1 text-sm">Score: {score}</div>
+            <div className="mb-1 text-sm">High Score: {highScore}</div>
+            <div className="mt-1 text-xs text-gray-200">Press [P] or Pause to resume</div>
           </div>
         )}
       </div>
-      <div className="mt-4 text-lg font-semibold text-purple-700 dark:text-yellow-200">
-        Score: {score} &nbsp; | &nbsp; High Score: {highScore}
+      <div className="mt-2 text-base font-semibold text-purple-700 dark:text-yellow-200">
+        Score: {score} &nbsp; | &nbsp; High: {highScore}
       </div>
       {!running && !gameOver && (
-        <div className="mt-2 text-gray-600 dark:text-gray-300 text-sm">
-          Use arrow keys to start and control the snake! <br />
-          Press <span className="font-bold">P</span> or Pause to pause/resume.<br />
-          Walls mode: {walls ? "ON (snake dies at edge)" : "OFF (snake wraps around)"}<br />
-          Emoji mode: {emojiMode ? "ON" : "OFF"}<br />
+        <div className="mt-1 text-gray-600 dark:text-gray-300 text-xs">
+          Use arrow keys to start and control! <br />
+          <span className="font-bold">P</span> = Pause &nbsp;|&nbsp; Walls: {walls ? "ON" : "OFF"} &nbsp;|&nbsp; Emoji: {emojiMode ? "ON" : "OFF"}<br />
           Theme: <span className="font-bold">{currentTheme.name}</span>
         </div>
       )}
