@@ -9,15 +9,16 @@ const SnakeTab = () => {
     <>
       {/* Floating Side Tab Button */}
       <motion.button
-        className="fixed left-2 top-1/2 z-50 bg-gradient-to-br from-purple-500 via-fuchsia-400 to-yellow-400 text-white shadow-xl rounded-full px-4 py-2 font-bold text-lg flex items-center gap-2 hover:scale-105 active:scale-95 transition-all"
+        className="fixed left-2 top-1/2 z-50 bg-gradient-to-br from-purple-500 via-fuchsia-400 to-yellow-400 text-white shadow-xl rounded-full px-4 py-2 font-bold text-lg flex items-center gap-2 hover:scale-110 active:scale-95 transition-all ring-2 ring-white/60 dark:ring-yellow-200/40"
         style={{ transform: "translateY(-50%)" }}
         onClick={() => setOpen(true)}
         initial={{ x: -80, opacity: 0.5 }}
         animate={{ x: 0, opacity: 1 }}
-        whileHover={{ scale: 1.08 }}
+        whileHover={{ scale: 1.13 }}
         aria-label="Open Snake Game"
       >
-        🐍 Snake
+        <span className="text-2xl animate-bounce">🐍</span>
+        <span className="hidden sm:inline">Snake</span>
       </motion.button>
 
       {/* Side Drawer for Snake Game */}
