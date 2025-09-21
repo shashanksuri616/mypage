@@ -264,7 +264,7 @@ const SimpleGame = () => {
             </div>
             <div className="flex gap-2 sm:gap-3 mb-4 flex-wrap justify-center">
                 {dice.map((d, i) => (
-                    <button
+                    <motion.button
                         key={i}
                         className={`
               text-3xl sm:text-5xl w-12 h-12 sm:w-16 sm:h-16
@@ -284,9 +284,12 @@ const SimpleGame = () => {
                         onClick={() => toggleHold(i)}
                         disabled={!canRoll}
                         aria-label={held[i] ? "Unhold die" : "Hold die"}
+                        whileTap={{ scale: 1.2 }}
+                        whileHover={{ scale: held[i] ? 1.13 : 1.07 }}
+                        layout
                     >
                         {diceUnicode[d]}
-                    </button>
+                    </motion.button>
                 ))}
             </div>
             <div className="flex items-center gap-4 mb-4">
@@ -369,7 +372,7 @@ const SimpleGame = () => {
                                     {scores[i] !== null ? (
                                         <span className="font-bold text-purple-600">{scores[i]}</span>
                                     ) : (
-                                        <button
+                                        <motion.button
                                             className={`px-2 py-0.5 rounded transition
                         ${selectedCat === i ? "bg-purple-200" : "hover:bg-purple-100 dark:hover:bg-purple-900"}
                         ${bestCat === i && !canRoll ? "ring-2 ring-green-400" : ""}
@@ -379,9 +382,12 @@ const SimpleGame = () => {
                                             style={{
                                                 touchAction: "manipulation",
                                             }}
+                                            whileTap={{ scale: 1.1 }}
+                                            whileHover={{ scale: 1.07 }}
+                                            layout
                                         >
                                             Score ({cat.calc(dice)})
-                                        </button>
+                                        </motion.button>
                                     )}
                                 </td>
                             </tr>
