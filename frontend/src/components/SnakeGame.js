@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const BOARD_SIZE = 10;
-const INITIAL_SNAKE = [
-  { x: 5, y: 5 },
-];
+const INITIAL_SNAKE = [{ x: 5, y: 5 }];
 const INITIAL_DIRECTION = { x: 0, y: -1 };
 
 function getRandomFood(snake) {
@@ -175,36 +174,48 @@ const SnakeGame = () => {
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="font-semibold text-purple-700 dark:text-yellow-200 text-xs">Speed:</span>
         {SPEED_LABELS.map((label, idx) => (
-          <button
+          <motion.button
             key={label}
             className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${speedIdx === idx ? "bg-purple-500 text-white border-purple-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
             onClick={() => setSpeedIdx(idx)}
             disabled={running}
+            whileTap={{ scale: 1.1 }}
+            whileHover={{ scale: 1.07 }}
+            layout
           >
             {label}
-          </button>
+          </motion.button>
         ))}
-        <button
+        <motion.button
           className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${paused ? "bg-yellow-400 text-white border-yellow-600" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setPaused(p => !p)}
           disabled={!running || gameOver}
+          whileTap={{ scale: 1.1 }}
+          whileHover={{ scale: 1.07 }}
+          layout
         >
           {paused ? "Resume" : "Pause"}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${walls ? "bg-red-500 text-white border-red-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setWalls(w => !w)}
           disabled={running}
+          whileTap={{ scale: 1.1 }}
+          whileHover={{ scale: 1.07 }}
+          layout
         >
           {walls ? "Walls: ON" : "Walls: OFF"}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           className={`px-1.5 py-0.5 rounded-lg font-semibold text-xs transition-all border ${emojiMode ? "bg-blue-500 text-white border-blue-700" : "bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700"}`}
           onClick={() => setEmojiMode(e => !e)}
           disabled={running}
+          whileTap={{ scale: 1.1 }}
+          whileHover={{ scale: 1.07 }}
+          layout
         >
           {emojiMode ? "Emoji: ON" : "Emoji: OFF"}
-        </button>
+        </motion.button>
         <select
           className="px-1.5 py-0.5 rounded-lg font-semibold text-xs border bg-white dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border-gray-300 dark:border-gray-700 transition"
           value={theme}
@@ -241,13 +252,19 @@ const SnakeGame = () => {
           else if (isBody) cellColor = currentTheme.colors[(bodyIdx + 1) % currentTheme.colors.length];
           else if (isFood) cellColor = currentTheme.colors[2 % currentTheme.colors.length];
           return (
-            <div
+            <motion.div
               key={i}
               className={`w-4 h-4 sm:w-5 sm:h-5 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-xs`}
               style={{
                 boxShadow: isHead ? "0 0 4px #a78bfa" : isFood ? "0 0 4px #fbbf24" : undefined,
                 transition: "background 0.1s"
               }}
+              layout
+              animate={{
+                scale: isHead ? 1.15 : isFood ? 1.09 : 1,
+                opacity: isHead || isBody || isFood ? 1 : 0.85,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               {emojiMode
                 ? isHead
@@ -258,31 +275,45 @@ const SnakeGame = () => {
                   ? currentTheme.food[foodEmojiIdx % currentTheme.food.length]
                   : ""
                 : ""}
-            </div>
+            </motion.div>
           );
         })}
-        {gameOver && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white rounded-lg z-10">
-            <div className="text-lg font-bold mb-1">Game Over</div>
-            <div className="mb-1 text-sm">Score: {score}</div>
-            <div className="mb-1 text-sm">High Score: {highScore}</div>
-            <button
-              className="px-3 py-1 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 rounded-lg font-semibold mt-2 text-xs"
-              onClick={restart}
+        <AnimatePresence>
+          {gameOver && (
+            <motion.div
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white rounded-lg z-10"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
             >
-              Restart
-            </button>
-            <div className="mt-1 text-xs text-gray-200">Press [Space] to restart</div>
-          </div>
-        )}
-        {paused && running && !gameOver && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white rounded-lg z-10">
-            <div className="text-lg font-bold mb-1">Paused</div>
-            <div className="mb-1 text-sm">Score: {score}</div>
-            <div className="mb-1 text-sm">High Score: {highScore}</div>
-            <div className="mt-1 text-xs text-gray-200">Press [P] or Pause to resume</div>
-          </div>
-        )}
+              <div className="text-lg font-bold mb-1">Game Over</div>
+              <div className="mb-1 text-sm">Score: {score}</div>
+              <div className="mb-1 text-sm">High Score: {highScore}</div>
+              <button
+                className="px-3 py-1 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 rounded-lg font-semibold mt-2 text-xs"
+                onClick={restart}
+              >
+                Restart
+              </button>
+              <div className="mt-1 text-xs text-gray-200">Press [Space] to restart</div>
+            </motion.div>
+          )}
+          {paused && running && !gameOver && (
+            <motion.div
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white rounded-lg z-10"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="text-lg font-bold mb-1">Paused</div>
+              <div className="mb-1 text-sm">Score: {score}</div>
+              <div className="mb-1 text-sm">High Score: {highScore}</div>
+              <div className="mt-1 text-xs text-gray-200">Press [P] or Pause to resume</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div className="mt-2 text-base font-semibold text-purple-700 dark:text-yellow-200">
         Score: {score} &nbsp; | &nbsp; High: {highScore}
