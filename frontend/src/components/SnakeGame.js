@@ -69,6 +69,7 @@ const SnakeGame = () => {
   const [emojiMode, setEmojiMode] = useState(false);
   const [foodEmojiIdx, setFoodEmojiIdx] = useState(0);
   const [theme, setTheme] = useState("classic");
+  const [showControls, setShowControls] = useState(false);
   const moveRef = useRef(direction);
 
   const currentTheme = THEMES.find(t => t.name.toLowerCase() === theme) || THEMES[0];
@@ -166,6 +167,18 @@ const SnakeGame = () => {
     setFoodEmojiIdx(0);
   };
 
+  // Touch controls for mobile
+  const handleTouch = (dir) => {
+    if (!running || paused) return;
+    setDirection(curr => {
+      if (dir === "up" && curr.y !== 1) return { x: 0, y: -1 };
+      if (dir === "down" && curr.y !== -1) return { x: 0, y: 1 };
+      if (dir === "left" && curr.x !== 1) return { x: -1, y: 0 };
+      if (dir === "right" && curr.x !== -1) return { x: 1, y: 0 };
+      return curr;
+    });
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] py-4">
       <h2 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
@@ -227,6 +240,12 @@ const SnakeGame = () => {
             <option key={t.name} value={t.name.toLowerCase()}>{t.name}</option>
           ))}
         </select>
+        <button
+          className="px-2 py-0.5 rounded-lg font-semibold text-xs bg-gray-100 dark:bg-gray-800 text-purple-700 dark:text-yellow-200 border border-gray-300 dark:border-gray-700 ml-2"
+          onClick={() => setShowControls(c => !c)}
+        >
+          {showControls ? "Hide Controls" : "Show Controls"}
+        </button>
       </div>
       <div
         className="grid"
@@ -315,6 +334,42 @@ const SnakeGame = () => {
           )}
         </AnimatePresence>
       </div>
+      {showControls && (
+        <div className="mt-3 flex flex-col items-center gap-2">
+          <div className="flex gap-2">
+            <button
+              className="px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold"
+              onClick={() => handleTouch("up")}
+              disabled={!running || paused}
+            >
+              ↑
+            </button>
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold"
+              onClick={() => handleTouch("left")}
+              disabled={!running || paused}
+            >
+              ←
+            </button>
+            <button
+              className="px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold"
+              onClick={() => handleTouch("down")}
+              disabled={!running || paused}
+            >
+              ↓
+            </button>
+            <button
+              className="px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold"
+              onClick={() => handleTouch("right")}
+              disabled={!running || paused}
+            >
+              →
+            </button>
+          </div>
+        </div>
+      )}
       <div className="mt-2 text-base font-semibold text-purple-700 dark:text-yellow-200">
         Score: {score} &nbsp; | &nbsp; High: {highScore}
       </div>
