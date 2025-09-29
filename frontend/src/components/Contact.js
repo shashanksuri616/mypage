@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Rainbow gradient backgrounds for social icons
 const SOCIAL_GRADIENTS = [
@@ -105,9 +105,12 @@ const Contact = () => {
           <div className="flex flex-col items-center gap-3">
             <div className="flex justify-center space-x-8 mb-2">
               {socials.map((s, i) => (
-                <span
+                <motion.span
                   key={s.name}
-                  className={`p-2 rounded-full bg-gradient-to-br ${SOCIAL_GRADIENTS[i % SOCIAL_GRADIENTS.length]} shadow-lg hover:scale-110 transition-all duration-300`}
+                  className={`p-2 rounded-full bg-gradient-to-br ${SOCIAL_GRADIENTS[i % SOCIAL_GRADIENTS.length]} shadow-lg`}
+                  whileHover={{ scale: 1.15, rotate: 8 }}
+                  whileTap={{ scale: 0.95, rotate: -8 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <a
                     href={s.url}
@@ -118,7 +121,7 @@ const Contact = () => {
                   >
                     {s.icon}
                   </a>
-                </span>
+                </motion.span>
               ))}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
@@ -128,67 +131,76 @@ const Contact = () => {
         </div>
         {/* Right: Contact Form */}
         <div className="flex-1 flex flex-col justify-center py-10 px-4 md:px-8">
-          {!sent ? (
-            <motion.form
-              className="grid grid-cols-1 gap-6"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              onSubmit={handleSubmit}
-            >
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                type="text"
-                placeholder="Your Name"
-                className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                required
-              />
-              <input
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                type="email"
-                placeholder="Your Email"
-                className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                required
-              />
-              <textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Your Message"
-                rows="5"
-                className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                required
-              ></textarea>
-              <motion.button
-                type="submit"
-                className="w-full py-3 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 hover:brightness-110 text-white font-semibold rounded-lg transition-all duration-300"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
+          <AnimatePresence mode="wait">
+            {!sent ? (
+              <motion.form
+                className="grid grid-cols-1 gap-6"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 40 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                onSubmit={handleSubmit}
               >
-                Send Message
-              </motion.button>
-            </motion.form>
-          ) : (
-            <motion.div
-              className="flex flex-col items-center justify-center h-full"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="text-3xl mb-4 text-green-600">Thank you!</div>
-              <div className="text-lg text-gray-700 dark:text-gray-200 mb-2">Your message has been sent.</div>
-              <button
-                className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
-                onClick={() => { setSent(false); setStatus(''); }}
+                <motion.input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  required
+                  whileFocus={{ scale: 1.04, borderColor: "#a78bfa" }}
+                />
+                <motion.input
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="Your Email"
+                  className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  required
+                  whileFocus={{ scale: 1.04, borderColor: "#a78bfa" }}
+                />
+                <motion.textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder="Your Message"
+                  rows="5"
+                  className="w-full px-4 py-3 rounded-lg bg-white/60 dark:bg-gray-800/60 text-black dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                  required
+                  whileFocus={{ scale: 1.03, borderColor: "#a78bfa" }}
+                ></motion.textarea>
+                <motion.button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-yellow-400 hover:brightness-110 text-white font-semibold rounded-lg transition-all duration-300"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Send Message
+                </motion.button>
+              </motion.form>
+            ) : (
+              <motion.div
+                className="flex flex-col items-center justify-center h-full"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 40 }}
+                transition={{ duration: 0.7 }}
               >
-                Send Another
-              </button>
-            </motion.div>
-          )}
+                <div className="text-3xl mb-4 text-green-600">Thank you!</div>
+                <div className="text-lg text-gray-700 dark:text-gray-200 mb-2">Your message has been sent.</div>
+                <motion.button
+                  className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
+                  onClick={() => { setSent(false); setStatus(''); }}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Send Another
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           {status && !sent && <p className="mt-4 text-center">{status}</p>}
         </div>
       </div>
