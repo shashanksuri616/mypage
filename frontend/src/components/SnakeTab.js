@@ -19,21 +19,21 @@ const SnakeTab = () => {
 
   return (
     <>
-      {/* Revamped Floating Side Tab */}
+      {/* Upgraded Floating Side Tab */}
       <motion.button
-        className="fixed left-2 top-1/2 z-50 bg-gradient-to-br from-purple-500 via-fuchsia-400 to-yellow-400 text-white shadow-xl rounded-full px-5 py-3 font-bold text-lg flex items-center gap-2 hover:scale-110 active:scale-95 transition-all ring-2 ring-white/60 dark:ring-yellow-200/40"
+        className="fixed left-2 top-1/2 z-50 bg-gradient-to-br from-purple-500 via-fuchsia-400 to-yellow-400 text-white shadow-xl rounded-full px-6 py-4 font-bold text-lg flex items-center gap-3 hover:scale-110 active:scale-95 transition-all ring-2 ring-white/60 dark:ring-yellow-200/40"
         style={{ transform: "translateY(-50%)" }}
         onClick={() => setOpen(true)}
-        initial={{ x: -80, opacity: 0.5 }}
+        initial={{ x: -100, opacity: 0.5 }}
         animate={{ x: 0, opacity: 1 }}
-        whileHover={{ scale: 1.13 }}
+        whileHover={{ scale: 1.15, rotate: -4 }}
         aria-label="Open Snake Game"
       >
-        <span className="text-2xl animate-bounce">🐍</span>
-        <span className="hidden sm:inline">Snake</span>
+        <span className="text-3xl animate-bounce">🐍</span>
+        <span className="hidden sm:inline font-extrabold tracking-wide drop-shadow">Snake</span>
       </motion.button>
 
-      {/* Revamped Side Drawer for Snake Game */}
+      {/* Upgraded Side Drawer for Snake Game */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -45,19 +45,19 @@ const SnakeTab = () => {
           >
             {/* Overlay */}
             <div
-              className="absolute inset-0 bg-black/40"
+              className="absolute inset-0 bg-black/50"
               onClick={() => setOpen(false)}
             />
             {/* Drawer */}
             <motion.div
               className="relative bg-white dark:bg-gray-900 shadow-2xl h-full w-full max-w-md sm:max-w-lg p-0 flex flex-col rounded-r-3xl"
-              initial={{ x: -400 }}
+              initial={{ x: -420 }}
               animate={{ x: 0 }}
-              exit={{ x: -400 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              exit={{ x: -420 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
               style={{
                 boxShadow: "0 8px 32px #a78bfa33",
-                borderRight: "8px solid #a78bfa",
+                borderRight: "10px solid #a78bfa",
                 overflow: "hidden",
               }}
             >
