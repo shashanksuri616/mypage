@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BOARD_SIZE = 10;
-const INITIAL_SNAKE = [{ x: 5, y: 5 }];
+const BOARD_SIZE = 12;
+const INITIAL_SNAKE = [{ x: 6, y: 6 }];
 const INITIAL_DIRECTION = { x: 0, y: -1 };
 
 function getRandomFood(snake) {
@@ -70,6 +70,7 @@ const SnakeGame = () => {
   const [foodEmojiIdx, setFoodEmojiIdx] = useState(0);
   const [theme, setTheme] = useState("classic");
   const [showControls, setShowControls] = useState(false);
+  const [showHowTo, setShowHowTo] = useState(false);
   const moveRef = useRef(direction);
 
   const currentTheme = THEMES.find(t => t.name.toLowerCase() === theme) || THEMES[0];
@@ -181,9 +182,36 @@ const SnakeGame = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] py-4">
-      <h2 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
-        Mini Snake
-      </h2>
+      <div className="flex items-center gap-2 mb-2 w-full justify-between">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-purple-500 via-fuchsia-400 to-yellow-400 bg-clip-text text-transparent">
+          Mini Snake
+        </h2>
+        <button
+          className="px-2 py-1 rounded bg-yellow-100 dark:bg-gray-800 text-purple-700 dark:text-yellow-200 text-xs font-semibold border border-yellow-300 dark:border-gray-700"
+          onClick={() => setShowHowTo(h => !h)}
+        >
+          {showHowTo ? "Hide Help" : "How to Play?"}
+        </button>
+      </div>
+      <AnimatePresence>
+        {showHowTo && (
+          <motion.div
+            className="mb-2 w-full max-w-xs bg-white/90 dark:bg-gray-800/90 rounded-lg shadow p-3 text-xs text-gray-700 dark:text-gray-200"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <div className="font-bold mb-1">How to Play</div>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Use <b>arrow keys</b> (or tap controls) to move the snake.</li>
+              <li>Eat food to grow and score points.</li>
+              <li>Avoid hitting yourself or the wall (if Walls ON).</li>
+              <li>Try different <b>themes</b> and <b>emoji mode</b>!</li>
+              <li>Press <b>P</b> to pause/resume. Space to restart after game over.</li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <span className="font-semibold text-purple-700 dark:text-yellow-200 text-xs">Speed:</span>
         {SPEED_LABELS.map((label, idx) => (
@@ -250,12 +278,12 @@ const SnakeGame = () => {
       <div
         className="grid"
         style={{
-          gridTemplateRows: `repeat(${BOARD_SIZE}, 1.1rem)`,
-          gridTemplateColumns: `repeat(${BOARD_SIZE}, 1.1rem)`,
+          gridTemplateRows: `repeat(${BOARD_SIZE}, 1.05rem)`,
+          gridTemplateColumns: `repeat(${BOARD_SIZE}, 1.05rem)`,
           background: "linear-gradient(135deg, #ede9fe 60%, #fbbf24 100%)",
-          borderRadius: 12,
+          borderRadius: 14,
           boxShadow: "0 2px 16px #a78bfa22",
-          border: "2px solid #a78bfa",
+          border: "2.5px solid #a78bfa",
           position: "relative",
         }}
         tabIndex={0}
@@ -275,12 +303,13 @@ const SnakeGame = () => {
               key={i}
               className={`w-4 h-4 sm:w-5 sm:h-5 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-xs`}
               style={{
-                boxShadow: isHead ? "0 0 4px #a78bfa" : isFood ? "0 0 4px #fbbf24" : undefined,
+                boxShadow: isHead ? "0 0 6px #a78bfa" : isFood ? "0 0 6px #fbbf24" : undefined,
+                background: isHead || isBody || isFood ? undefined : "rgba(255,255,255,0.5)",
                 transition: "background 0.1s"
               }}
               layout
               animate={{
-                scale: isHead ? 1.15 : isFood ? 1.09 : 1,
+                scale: isHead ? 1.18 : isFood ? 1.11 : 1,
                 opacity: isHead || isBody || isFood ? 1 : 0.85,
               }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
