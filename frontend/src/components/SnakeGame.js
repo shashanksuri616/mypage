@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BOARD_SIZE = 12;
-const INITIAL_SNAKE = [{ x: 6, y: 6 }];
+const BOARD_SIZE = 14; // Even more room!
+const INITIAL_SNAKE = [{ x: 7, y: 7 }];
 const INITIAL_DIRECTION = { x: 0, y: -1 };
 
 function getRandomFood(snake) {
@@ -278,10 +278,10 @@ const SnakeGame = () => {
       <div
         className="grid"
         style={{
-          gridTemplateRows: `repeat(${BOARD_SIZE}, 1.05rem)`,
-          gridTemplateColumns: `repeat(${BOARD_SIZE}, 1.05rem)`,
+          gridTemplateRows: `repeat(${BOARD_SIZE}, 0.95rem)`,
+          gridTemplateColumns: `repeat(${BOARD_SIZE}, 0.95rem)`,
           background: "linear-gradient(135deg, #ede9fe 60%, #fbbf24 100%)",
-          borderRadius: 14,
+          borderRadius: 16,
           boxShadow: "0 2px 16px #a78bfa22",
           border: "2.5px solid #a78bfa",
           position: "relative",
@@ -303,13 +303,13 @@ const SnakeGame = () => {
               key={i}
               className={`w-4 h-4 sm:w-5 sm:h-5 border border-white/40 dark:border-gray-900/40 rounded flex items-center justify-center text-xs`}
               style={{
-                boxShadow: isHead ? "0 0 6px #a78bfa" : isFood ? "0 0 6px #fbbf24" : undefined,
+                boxShadow: isHead ? "0 0 8px #a78bfa" : isFood ? "0 0 8px #fbbf24" : undefined,
                 background: isHead || isBody || isFood ? undefined : "rgba(255,255,255,0.5)",
                 transition: "background 0.1s"
               }}
               layout
               animate={{
-                scale: isHead ? 1.18 : isFood ? 1.11 : 1,
+                scale: isHead ? 1.22 : isFood ? 1.13 : 1,
                 opacity: isHead || isBody || isFood ? 1 : 0.85,
               }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
